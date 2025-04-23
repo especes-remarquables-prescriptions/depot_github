@@ -2,6 +2,9 @@
 
 import streamlit as st # Framework pour créer des applications web interactives
 import pandas as pd # Bibliothèque pour manipuler des données tabulaires
+import geopandas as gpd
+import folium
+from streamlit_folium import st_folium
 
 
 # --------------------- FONCTIONS ---------------------
@@ -187,8 +190,8 @@ if st.session_state.authenticated:
 
         # Aucune forêt sélectionnée : afficher la liste
         if st.session_state.selected_foret is None:
-            selected_foret = st.selectbox("🌲 Sélectionnez une forêt :", sorted(forets))
-            if st.button("🔍 Voir les parcelles"):
+            selected_foret = st.selectbox("🌲 Sélectionnez une forêt :", [""] + sorted(forets))
+            if st.button("🔍Voir les espèces remarquables par parcelle"):
                 st.session_state.selected_foret = selected_foret
                 st.rerun()
 
@@ -197,10 +200,56 @@ if st.session_state.authenticated:
             foret = st.session_state.selected_foret
             df_foret = df[df['Forêt'] == foret]
             parcelles_disponibles = df_foret["Parcelle de forêt"].dropna().unique()
-            selected_parcelle = st.selectbox("📌 Sélectionnez une parcelle :", sorted(parcelles_disponibles))
-            if st.button("🔍 Voir les espèces"):
-                st.session_state.selected_parcelle = selected_parcelle
-                st.rerun()
+            selected_parcelle = st.selectbox("📌 Sélectionnez une parcelle :", [""] + sorted(parcelles_disponibles))
+
+            # Gestion des coordonnées et du sous-ensemble de données à afficher
+            if selected_parcelle and selected_parcelle != "":
+                df_affichage = df_foret[df_foret["Parcelle de forêt"] == selected_parcelle]
+            else:
+                df_affichage = df_foret
+
+            lat_centre = df_affichage["Coordonnée 2"].mean()
+            lon_centre = df_affichage["Coordonnée 1"].mean()
+
+            # Créer la carte
+            m = folium.Map(location=[lat_centre, lon_centre], zoom_start=13)
+
+            # Ajouter le cadastre avec le service WMS de l'IGN
+            folium.raster_layers.WmsTileLayer(
+                url="https://data.geopf.fr/wms-r/wms",
+                layers="CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
+                name="Cadastre",
+                fmt="image/png",
+                transparent=True,
+                version="1.3.0",
+                overlay=True,
+                control=True
+            ).add_to(m)
+
+            # Ajouter les points naturalistes avec popup enrichi
+            for _, row in df_affichage.iterrows():
+                if pd.notna(row["Coordonnée 1"]) and pd.notna(row["Coordonnée 2"]):
+                    popup = f""" <b>Espèce :</b> {row['Espèce']}<br>
+                    <b>Commentaire de la localisation : </b> {row["Commentaire de la localisation"]}<br>
+                    <b>Commentaire de l'observation : </b> {row["Commentaire de l'observation"]}"""
+        
+                    folium.Marker(
+                        location=[row["Coordonnée 2"], row["Coordonnée 1"]],
+                        popup=folium.Popup(popup, max_width=500),
+                        icon=folium.Icon(color="green", icon="leaf", prefix="fa")
+                    ).add_to(m)
+
+            # Ajouter le contrôle de couche (permet d'activer/désactiver la couche cadastre)
+            folium.LayerControl().add_to(m)
+
+            # Afficher la carte
+            st.markdown("### 📍 Localisation des espèces remarquables")
+            st_folium(m, width=900, height=600)  
+
+            if selected_parcelle and selected_parcelle != "":
+                if st.button("🔍 Voir la liste des espèces par parcelle"):
+                    st.session_state.selected_parcelle = selected_parcelle
+                    st.rerun()
             if st.button("⬅️ Retour à la liste des forêts"):
                 st.session_state.selected_foret = None
                 st.session_state.selected_parcelle = None
