@@ -408,8 +408,7 @@ if st.session_state.authenticated:
 
             st.button("⬅️ Retour à la carte de la parcelle", on_click=lambda: st.session_state.update({"view": "parcelle_view", "selected_parcelle":st.session_state.selected_parcelle}))
             
-            if st.button("⬅️ Retour à la liste des forêts"):
-                reset_all
+            st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view"}))
 
     if st.session_state.get("reset_requested"):
         st.session_state.reset_requested = False
