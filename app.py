@@ -59,6 +59,159 @@ def get_reglementaire_color(index):
     return colors.get(index, '#ffffff') # Blanc par défaut si l’indice est inconnu
 
 
+# Fonction de reset global
+def reset_all():
+    st.session_state.selected_foret = None
+    st.session_state.selected_parcelle = None
+    st.session_state.view = "start"
+    st.session_state.reset_requested = True
+
+
+# Fonction d'affichage des cartes
+def afficher_carte(df, titre="📍 Localisation des espèces"):
+    if df.empty:
+        st.warning("Aucune donnée à afficher pour cette sélection.")
+        return
+
+    # Calcul du centre de la carte
+    lat_centre = df["Coordonnée 2"].mean()
+    lon_centre = df["Coordonnée 1"].mean()
+
+    # Création de la carte Folium
+    m = folium.Map(location=[lat_centre, lon_centre], zoom_start=13)
+
+    # Ajout du fond de carte cadastre (WMS IGN)
+    folium.raster_layers.WmsTileLayer(
+        url="https://data.geopf.fr/wms-r/wms",
+        layers="CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
+        name="Cadastre",
+        fmt="image/png",
+        transparent=True,
+        version="1.3.0",
+        overlay=True,
+        control=True
+    ).add_to(m)
+
+    # Ajout des points naturalistes
+    for _, row in df.iterrows():
+        if pd.notna(row["Coordonnée 1"]) and pd.notna(row["Coordonnée 2"]):
+            popup = f"""<b>Parcelle :</b> {row['Parcelle de forêt']}<br>
+            <b>Espèce :</b> {row['Espèce']}<br>
+            <b>Commentaire de la localisation :</b> {row['Commentaire de la localisation']}<br>
+            <b>Commentaire de l'observation :</b> {row["Commentaire de l'observation"]}<br>
+            <b>Date d'observation :</b> {row["Date de début"]}<br>
+            <b>Coordonnée 1 :</b> {row["Coordonnée 1"]}<br>
+            <b>Coordonnée 2 :</b> {row["Coordonnée 2"]}<br>
+            <b>Système de coordonnées :</b> {row["Système de coordonnées"]}<br>
+            <b>Précision de la localisation :</b> {row["Précision de la localisation"]}"""
+
+            folium.Marker(
+                location=[row["Coordonnée 2"], row["Coordonnée 1"]],
+                popup=folium.Popup(popup, max_width=500),
+                icon=folium.Icon(color="orange", icon="leaf", prefix="fa")
+            ).add_to(m)
+
+    # Contrôle de couches
+    folium.LayerControl().add_to(m)
+
+    # Affichage dans Streamlit
+    st.markdown(f"### {titre}")
+    st_folium(m, width=900, height=600)
+
+
+# Fonction d'affichage des statuts et prescriptions
+def afficher_statuts_prescriptions(df_filtré, df_reference):
+    if df_filtré.empty:
+        st.warning("Aucune espèce à afficher pour cette sélection.")
+        return
+
+    st.dataframe(df_filtré)
+
+    # Création d’un mapping lisible : {cd_nom: "Espèce"}
+    df_temp = df_filtré[['Code taxon (cd_nom)', 'Espèce']].dropna()
+    df_temp['Espèce'] = df_temp['Espèce'].astype(str).str.strip()
+    df_temp['Code taxon (cd_nom)'] = df_temp['Code taxon (cd_nom)'].astype(str).str.strip()
+
+    species_dict = dict(zip(df_temp['Code taxon (cd_nom)'], df_temp['Espèce']))
+    reverse_dict = {v: k for k, v in species_dict.items()}
+
+    # Affichage des espèces comme options dans la selectbox
+    selected_label = st.selectbox("🔎 Choisissez une espèce :", sorted(species_dict.values()))
+
+    # On récupère le cd_nom correspondant au nom d’espèce sélectionné
+    selected_species = reverse_dict.get(selected_label)
+
+    if selected_species:
+        selected_species = str(selected_species).strip()
+        df_reference['CD_NOM'] = df_reference['CD_NOM'].astype(str).str.strip()
+        species_reference_info = df_reference[df_reference['CD_NOM'] == selected_species]
+
+        st.subheader(f"📘 Statuts et prescriptions : {selected_species}")
+
+        if not species_reference_info.empty and pd.notna(species_reference_info['Rôle_TFT'].iloc[0]) and str(species_reference_info['Rôle_TFT'].iloc[0]).strip():
+            nom_sci_brut = species_reference_info['Nom_scientifique_valide'].iloc[0]
+            nom_sci_sans_balise = nom_sci_brut.replace('<i>', '').replace('</i>', '')
+            nom_en_italique = nom_sci_sans_balise.split(' (')[0]
+            auteur = nom_sci_sans_balise[len(nom_en_italique):]
+            nom_final = f"*{nom_en_italique}*{auteur}"
+
+            st.markdown(f"**Nom scientifique :** {nom_final}")
+            st.markdown(f"**Nom vernaculaire :** {species_reference_info['Nom_vernaculaire'].iloc[0]}")
+            st.markdown(f"**Catégorie naturaliste :** {species_reference_info['Cat_naturaliste'].iloc[0]}")
+
+            conserv_index = species_reference_info['Indice_priorité_conservation'].iloc[0]
+            color = get_conservation_color(conserv_index)
+            st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité de conservation ℹ️ :</b> {conserv_index}</div>""", unsafe_allow_html=True)
+
+            reg_index = species_reference_info['Indice_priorité_réglementaire'].iloc[0]
+            color_reg = get_reglementaire_color(reg_index)
+            st.markdown(f"""<div style='background-color: {color_reg}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité réglementaire ℹ️ :</b> {reg_index}</div>""", unsafe_allow_html=True)
+
+            st.markdown ("---")
+            st.markdown(f"**Code unique clause :** {species_reference_info['Code_unique'].iloc[0]}")
+            st.markdown(f"**Condition d'application de la clause :** {species_reference_info['Condition(s)_application_clause'].iloc[0]}")
+
+            with st.expander("📋 Libellés des clauses à inscrire"):
+                st.write(f"**Fiche chantier (TECK) :** {species_reference_info['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
+                st.write(f"**Fiche désignation (DESIGNATION MOBILE) :** {species_reference_info['Libellé_fiche_désignation_ONF (DESIGNATION MOBILE)'].iloc[0]}")
+                st.write(f"**Fiche vente (PRODUCTION BOIS) :** {species_reference_info['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
+
+            st.markdown(f"**Rôle du TFT :** {species_reference_info['Rôle_TFT'].iloc[0]}")
+
+            st.markdown ("---")
+            with st.expander("ℹ️ Légende des indices de priorité"):
+                st.markdown("""
+                **Indice de priorité de conservation** :
+                - `5` : Majeure
+                - `4` : Très élevée 
+                - `3` : Élevée
+                - `2` : Modérée
+                - `1` : Faible
+
+                **Indice de priorité réglementaire** :
+                - `4` : Risque réglementaire majeur (Espèce réglementée au niveau européen + national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
+                - `3` : Risque réglementaire élevé (Espèce réglementée au niveau national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
+                - `2` : Risque réglementaire uniquement si les interventions forestières impactent les spécimens.
+                - `1` : La gestion forestière courante de l'ONF suffit à respecter la réglementation associée à l'espèce, que ce soit sur les spécimens ou sur les éléments nécessaires au bon fonctionnement de leur cycle biologique.
+                - `0` : Espèce non protégée.
+                """)
+
+            respo_dict = {1: "Faible", 2: "Modérée", 3: "Significative", 4: "Forte", 5: "Majeure"}
+            valeur_respo = species_reference_info['Respo_reg'].iloc[0]
+            texte_respo = respo_dict.get(valeur_respo, "Non renseignée")
+
+            with st.expander("🟢 Détail des statuts"):
+                st.write(f"**Liste rouge régionale :** {traduire_statut(species_reference_info['LR_reg'].iloc[0])}")
+                st.write(f"**Liste rouge nationale :** {traduire_statut(species_reference_info['LR_nat'].iloc[0])}")
+                st.write(f"**Responsabilité régionale :** {texte_respo}")
+                st.write(f"**Directives européennes :** {traduire_statut(species_reference_info['Directives_euro'].iloc[0])}")
+                st.write(f"**Plan d'action :** {traduire_statut(species_reference_info['Plan_action'].iloc[0])}")
+                st.write(f"**Arrêté de protection :** {traduire_statut(species_reference_info['Arrêté_protection'].iloc[0])}")
+                st.write(f"**Article de l'arrêté :** {traduire_statut(species_reference_info['Article_arrêté'].iloc[0])}")
+        else:
+            st.info("❌ Cette espèce ne fait pas l'objet de prescription environnementale.")
+
+
 # --------------------- CONFIGURATION ---------------------
 
 # Définition de la configuration de la page Streamlit
@@ -187,193 +340,80 @@ if st.session_state.authenticated:
             st.session_state.selected_foret = None
         if 'selected_parcelle' not in st.session_state:
             st.session_state.selected_parcelle = None
+        if "view" not in st.session_state:
+            st.session_state.view = 'start'
 
-        # Aucune forêt sélectionnée : afficher la liste
+        # Sélection de la forêt
         if st.session_state.selected_foret is None:
             selected_foret = st.selectbox("🌲 Sélectionnez une forêt :", [""] + sorted(forets))
-            if st.button("🔍Voir les espèces remarquables par parcelle"):
+            if st.button("🔍Voir les espèces remarquables par parcelle") and selected_foret:
                 st.session_state.selected_foret = selected_foret
+                st.session_state.view = "forest_view"
                 st.rerun()
 
-        # Forêt sélectionnée mais pas encore de parcelle
-        elif st.session_state.selected_parcelle is None:
+        # Vue forêt sélectionnée
+        elif st.session_state.view == "forest_view":
             foret = st.session_state.selected_foret
             df_foret = df[df['Forêt'] == foret]
-            parcelles_disponibles = df_foret["Parcelle de forêt"].dropna().unique()
-            selected_parcelle = st.selectbox("📌 Sélectionnez une parcelle :", [""] + sorted(parcelles_disponibles))
+            afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
 
-            # Gestion des coordonnées et du sous-ensemble de données à afficher
-            if selected_parcelle and selected_parcelle != "":
-                df_affichage = df_foret[df_foret["Parcelle de forêt"] == selected_parcelle]
-            else:
-                df_affichage = df_foret
-
-            lat_centre = df_affichage["Coordonnée 2"].mean()
-            lon_centre = df_affichage["Coordonnée 1"].mean()
-
-            # Créer la carte
-            m = folium.Map(location=[lat_centre, lon_centre], zoom_start=13)
-
-            # Ajouter le cadastre avec le service WMS de l'IGN
-            folium.raster_layers.WmsTileLayer(
-                url="https://data.geopf.fr/wms-r/wms",
-                layers="CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
-                name="Cadastre",
-                fmt="image/png",
-                transparent=True,
-                version="1.3.0",
-                overlay=True,
-                control=True
-            ).add_to(m)
-
-            # Ajouter les points naturalistes avec popup enrichi
-            for _, row in df_affichage.iterrows():
-                if pd.notna(row["Coordonnée 1"]) and pd.notna(row["Coordonnée 2"]):
-                    popup = f""" <b>Espèce :</b> {row['Espèce']}<br>
-                    <b>Commentaire de la localisation : </b> {row["Commentaire de la localisation"]}<br>
-                    <b>Commentaire de l'observation : </b> {row["Commentaire de l'observation"]}"""
-        
-                    folium.Marker(
-                        location=[row["Coordonnée 2"], row["Coordonnée 1"]],
-                        popup=folium.Popup(popup, max_width=500),
-                        icon=folium.Icon(color="green", icon="leaf", prefix="fa")
-                    ).add_to(m)
-
-            # Ajouter le contrôle de couche (permet d'activer/désactiver la couche cadastre)
-            folium.LayerControl().add_to(m)
-
-            # Afficher la carte
-            st.markdown("### 📍 Localisation des espèces remarquables")
-            st_folium(m, width=900, height=600)  
-
-            if selected_parcelle and selected_parcelle != "":
-                if st.button("🔍 Voir la liste des espèces par parcelle"):
-                    st.session_state.selected_parcelle = selected_parcelle
-                    st.rerun()
-            if st.button("⬅️ Retour à la liste des forêts"):
-                st.session_state.selected_foret = None
-                st.session_state.selected_parcelle = None
+            if st.button("📌 Filtrer par parcelle"):
+                st.session_state.view = "parcelle_view"
                 st.rerun()
 
-        # Forêt + parcelle sélectionnées : afficher les espèces
-        else:
+            if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la forêt"):
+                st.session_state.view = "species_forest"
+                st.rerun()
+
+            st.button("⬅️ Retour à la liste des forêts", on_click=reset_all)
+
+        # Vue filtre par parcelle
+        elif st.session_state.view == "parcelle_view":
             foret = st.session_state.selected_foret
-            parcelle = st.session_state.selected_parcelle
-            df_filtré = df[(df['Forêt'] == foret) & (df['Parcelle de forêt'] == parcelle)]
+            df_foret = df[df['Forêt'] == foret]
+            parcelles_dispo = sorted(df_foret["Parcelle de forêt"].unique())
 
-            st.subheader(f"📍 Données pour la forêt : {foret}, parcelle {parcelle}")
-            st.dataframe(df_filtré)
+            # Définir la parcelle par défaut (si connue) OU forcer à "" sinon
+            if st.session_state.selected_parcelle in parcelles_dispo:
+                default_index = parcelles_dispo.index(st.session_state.selected_parcelle)
+                selected_parcelle = st.selectbox("📌 Choisissez une parcelle :", parcelles_dispo, index=default_index)
+            else:
+                selected_parcelle = st.selectbox("📌 Choisissez une parcelle :", [""] + parcelles_dispo)
+                
+            if selected_parcelle:
+                st.session_state.selected_parcelle = selected_parcelle
+                df_parcelle = df_foret[df_foret["Parcelle de forêt"] == selected_parcelle]
+                afficher_carte(df_parcelle, titre=f"📍 Espèces remarquables dans la parcelle {selected_parcelle}")
 
+                if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la parcelle"):
+                    st.session_state.view = "species_parcelle"
+                    st.rerun()
 
-            species_list = df_filtré['Code taxon (cd_nom)'].unique()
-            selected_species = st.selectbox("🔎 Choisissez une espèce :", species_list)
+            st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view", "selected_parcelle": None}))
+            
+        # Statuts et prescriptions forêt
+        elif st.session_state.view == "species_forest":
+            df_filtré = df[df['Forêt'] == st.session_state.selected_foret]
+            afficher_statuts_prescriptions(df_filtré, df_reference)
 
-            if selected_species:
-                df_reference['CD_NOM'] = df_reference['CD_NOM'].astype(str).str.strip()
-                selected_species = str(selected_species).strip()
-                species_reference_info = df_reference[df_reference['CD_NOM'] == selected_species]
+            st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view"}))
 
-                st.subheader(f"📘 Statuts et prescriptions : {selected_species}")
+        # Statuts et prescriptions parcelle
+        elif st.session_state.view == "species_parcelle":
+            df_filtré = df[
+                (df['Forêt'] == st.session_state.selected_foret) &
+                (df['Parcelle de forêt'] == st.session_state.selected_parcelle)
+            ]
+            afficher_statuts_prescriptions(df_filtré, df_reference)
 
-                if not species_reference_info.empty and pd.notna(species_reference_info['Rôle_TFT'].iloc[0]) and str(species_reference_info['Rôle_TFT'].iloc[0]).strip() != "":
-                    with st.container():
-                        nom_sci_brut = species_reference_info['Nom_scientifique_valide'].iloc[0]
-
-                        # Supprime les balises HTML <i> et </i>
-                        nom_sci_sans_balise = nom_sci_brut.replace('<i>', '').replace('</i>', '')
-
-                        # Mets juste le nom scientifique en italique, pas l’auteur
-                        nom_en_italique = nom_sci_sans_balise.split(' (')[0]  # Prend juste "Sympetrum danae"
-                        auteur = nom_sci_sans_balise[len(nom_en_italique):]   # Récupère " (Sulzer, 1776)"
-
-                        # Combine le tout en Markdown
-                        nom_final = f"*{nom_en_italique}*{auteur}"
-                        st.markdown(f"**Nom scientifique :** {nom_final}")
-                        st.markdown(f"**Nom vernaculaire :** {species_reference_info['Nom_vernaculaire'].iloc[0]}")
-                        st.markdown(f"**Catégorie naturaliste :** {species_reference_info['Cat_naturaliste'].iloc[0]}")
-                        
-                        # Affichage des informations sur l'espèce
-                        conserv_index = species_reference_info['Indice_priorité_conservation'].iloc[0]
-                        color = get_conservation_color(conserv_index)
-
-                        st.markdown(f"""
-                            <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                            <b>Priorité de conservation ℹ️ :</b> {conserv_index}
-                            </div>
-                            """, unsafe_allow_html=True)
-                        
-                        reg_index = species_reference_info['Indice_priorité_réglementaire'].iloc[0]
-                        color_reg = get_reglementaire_color(reg_index)
-
-                        st.markdown(f"""
-                            <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                            <b>Priorité réglementaire ℹ️ :</b> {reg_index}
-                            </div>
-                            """, unsafe_allow_html=True)
-
-                        st.markdown ("---")
-                        st.markdown(f"**Code unique clause :** {species_reference_info['Code_unique'].iloc[0]}")
-                        st.markdown(f"**Condition d'application de la clause :** {species_reference_info['Condition(s)_application_clause'].iloc[0]}")
-                        
-                        with st.expander("📋 Libellés des clauses à inscrire"):
-                            st.write(f"**Libellé Fiche chantier (TECK) :** {species_reference_info['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
-                            st.write(f"**Libellé Fiche désignation (DESIGNATION MOBILE) :** {species_reference_info['Libellé_fiche_désignation_ONF (DESIGNATION MOBILE)'].iloc[0]}")
-                            st.write(f"**Libellé Fiche vente (PRODUCTION BOIS) :** {species_reference_info['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
-
-                        st.markdown(f"**Rôle du TFT :** {species_reference_info['Rôle_TFT'].iloc[0]}")
-
-
-                        st.markdown ("---")
-                        with st.expander("ℹ️ Légende des indices de priorité"):
-                            st.markdown("""
-                            **Indice de priorité de conservation** :
-                            - `5` : Priorité de conservation majeure
-                            - `4` : Priorité de conservation très élevée 
-                            - `3` : Priorité de conservation élevée
-                            - `2` : Priorité de conservation modérée
-                            - `1` : Priorité de conservation faible
-
-                            **Indice de priorité réglementaire** :
-                            - `4` : Risque réglementaire majeur (Espèce réglementée au niveau européen + national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                            - `3` : Risque réglementaire élevé (Espèce réglementée au niveau national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                            - `2` : Risque réglementaire uniquement si les interventions forestières impactent les spécimens.
-                            - `1` : La gestion forestière courante de l'ONF suffit à respecter la réglementation associée à l'espèce, que ce soit sur les spécimens ou sur les éléments nécessaires au bon fonctionnement de leur cycle biologique.
-                            - `0` : Espèce non protégée.
-                            """)
-
-                        # Dictionnaire de correspondance
-                        respo_dict = {
-                            1: "Faible",
-                            2: "Modérée",
-                            3: "Significative",
-                            4: "Forte",
-                            5: "Majeure"
-                        }
-
-                        # Récupérer la valeur brute dans le tableau
-                        valeur_respo = species_reference_info['Respo_reg'].iloc[0]
-
-                        # Traduire en texte si possible
-                        texte_respo = respo_dict.get(valeur_respo, "Non renseignée")
-
-                        with st.expander("🟢Détail des statuts"):
-                            st.write(f"**Liste rouge régionale :** {traduire_statut(species_reference_info['LR_reg'].iloc[0])}")
-                            st.write(f"**Liste rouge nationale :** {traduire_statut(species_reference_info['LR_nat'].iloc[0])}")
-                            st.write(f"**Responsabilité régionale :** {texte_respo}")
-                            st.write(f"**Directives européennes :** {traduire_statut(species_reference_info['Directives_euro'].iloc[0])}")
-                            st.write(f"**Plan d'action :** {traduire_statut(species_reference_info['Plan_action'].iloc[0])}")
-                            st.write(f"**Arrêté de protection :** {traduire_statut(species_reference_info['Arrêté_protection'].iloc[0])}")
-                            st.write(f"**Article de l'arrêté :** {traduire_statut(species_reference_info['Article_arrêté'].iloc[0])}")
-                else:
-                    st.info("❌ Cette espèce ne fait pas l'objet de prescription environnementale.")
-
-            if st.button("⬅️ Retour à la liste des parcelles"):
-                st.session_state.selected_parcelle = None
-                st.rerun()
+            st.button("⬅️ Retour à la carte de la parcelle", on_click=lambda: st.session_state.update({"view": "parcelle_view", "selected_parcelle":st.session_state.selected_parcelle}))
+            
             if st.button("⬅️ Retour à la liste des forêts"):
-                st.session_state.selected_foret = None
-                st.session_state.selected_parcelle = None
-                st.rerun()
+                reset_all
+
+    if st.session_state.get("reset_requested"):
+        st.session_state.reset_requested = False
+        st.rerun()
 
 
     # --------------------- PAGE ESPECES ---------------------
