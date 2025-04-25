@@ -237,13 +237,13 @@ PASSWORD = "caprimulgus"
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
-# --------------------- MESSAGE BANDEAU -------------------
+# --------------------- BANDEAU FIXE ---------------------
 
-# Ajout du bandeau en haut de la page avec du CSS pour le style
+# Ajouter du CSS pour un bandeau fixe en haut de l'écran
 st.markdown("""
     <style>
         .header-banner {
-            background-color: #ff0000; /* Rouge */
+            background-color: #ff0000;  /* Rouge */
             color: white;
             padding: 10px;
             text-align: center;
@@ -251,11 +251,21 @@ st.markdown("""
             font-weight: bold;
             position: fixed;
             top: 0;
+            left: 0;
             width: 100%;
-            z-index: 10000; /* Assurer que le bandeau soit bien en dessus */
-            box-shadow: 0px 4px 6px rgba(0,0,0,0.1); /* Ajout d'une ombre pour plus de visibilité */
+            z-index: 9999;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Ajouter un espace en haut de la page pour éviter que le contenu soit caché par le bandeau */
+        .main {
+            padding-top: 60px;
         }
     </style>
+""", unsafe_allow_html=True)
+
+# HTML pour le bandeau
+st.markdown("""
     <div class="header-banner">
         #### OUTIL EN COURS DE DEVELOPPEMENT #### SEAP ONF NORMANDIE ####
     </div>
