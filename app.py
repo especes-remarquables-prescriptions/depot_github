@@ -156,7 +156,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
         selected_species = str(selected_species).strip()
         df_reference['CD_NOM'] = df_reference['CD_NOM'].astype(str).str.strip()
         species_reference_info = df_reference[df_reference['CD_NOM'] == selected_species]
-
+        st.markdown("")
         st.subheader(f"📘 Statuts et prescriptions : {selected_label}")
 
         if not species_reference_info.empty and pd.notna(species_reference_info['Rôle_TFT'].iloc[0]) and str(species_reference_info['Rôle_TFT'].iloc[0]).strip():
