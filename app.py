@@ -254,8 +254,7 @@ st.markdown("""
             left: 0;
             width: 100%;
             z-index: 999999;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);}
     </style>
 """, unsafe_allow_html=True)
 
