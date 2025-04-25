@@ -360,15 +360,17 @@ if st.session_state.authenticated:
                 afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
 
             with st.container():
-                if st.button("📌 Filtrer par parcelle"):
-                    st.session_state.view = "parcelle_view"
-                    st.rerun()
-
-                if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la forêt"):
-                    st.session_state.view = "species_forest"
-                    st.rerun()
-
-                st.button("⬅️ Retour à la liste des forêts", on_click=reset_all)
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    if st.button("📌 Filtrer par parcelle"):
+                        st.session_state.view = "parcelle_view"
+                        st.rerun()
+                with col2:
+                    if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la forêt"):
+                        st.session_state.view = "species_forest"
+                        st.rerun()
+                with col3:
+                    st.button("⬅️ Retour à la liste des forêts", on_click=reset_all)
 
         # Vue filtre par parcelle
         elif st.session_state.view == "parcelle_view":
