@@ -243,8 +243,8 @@ if "authenticated" not in st.session_state:
 st.markdown("""
     <style>
         .header-banner {
-            background-color: #A1887F;  /* Marron */
-            color: #FF0000;  /* Rouge */
+            background-color: rgba(183, 28, 28, 0.2);  /* Rouge transparent */
+            color: black;  /* Texte noir */
             padding: 6px 10px;
             text-align: center;
             font-size: 18px;
