@@ -416,7 +416,6 @@ if st.session_state.authenticated:
                 afficher_carte(df_parcelle, titre=f"📍 Espèces remarquables dans la parcelle {selected_parcelle}")
 
                 if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la parcelle"):
-                    st.markdown (f"Détails des espèces remarquables pour la parcelle {selected_parcelle}")
                     st.session_state.view = "species_parcelle"
                     st.rerun()
 
@@ -431,6 +430,7 @@ if st.session_state.authenticated:
 
         # Statuts et prescriptions parcelle
         elif st.session_state.view == "species_parcelle":
+            st.markdown (f" ### Détails des espèces remarquables pour la parcelle {st.session_state.selected_parcelle}")
             df_filtré = df[
                 (df['Forêt'] == st.session_state.selected_foret) &
                 (df['Parcelle de forêt'] == st.session_state.selected_parcelle)
