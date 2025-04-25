@@ -6,6 +6,29 @@ import geopandas as gpd
 import folium
 from streamlit_folium import st_folium
 
+# --------------------- MESSAGE BANDEAU -------------------
+
+# Ajout du bandeau en haut de la page avec du CSS pour le style
+st.markdown("""
+    <style>
+        .header-banner {
+            background-color: #ff0000; /* Rouge */
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+    </style>
+    <div class="header-banner">
+        #### OUTIL EN COURS DE DEVELOPPEMENT #### SEAP ONF NORMANDIE ####
+    </div>
+""", unsafe_allow_html=True)
+
 
 # --------------------- FONCTIONS ---------------------
 
