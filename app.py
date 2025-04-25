@@ -368,7 +368,7 @@ if st.session_state.authenticated:
             df_foret = df[df['Forêt'] == foret]
             afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
             st.write("")
-            with st.conainer ():
+            with st.container ():
                 if st.button("📌 Filtrer par parcelle"):
                     st.session_state.view = "parcelle_view"
                     st.rerun()
