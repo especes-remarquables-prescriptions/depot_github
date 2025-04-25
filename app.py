@@ -368,13 +368,14 @@ if st.session_state.authenticated:
             df_foret = df[df['Forêt'] == foret]
             afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
             st.write("")
-            if st.button("📌 Filtrer par parcelle"):
-                st.session_state.view = "parcelle_view"
-                st.rerun()
-            if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la forêt"):
-                st.session_state.view = "species_forest"
-                st.rerun()
-            st.button("⬅️ Retour à la liste des forêts", on_click=lambda: st.session_state.update({"view": "start","selected_foret": None}))
+            with st.conainer ():
+                if st.button("📌 Filtrer par parcelle"):
+                    st.session_state.view = "parcelle_view"
+                    st.rerun()
+                if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la forêt"):
+                    st.session_state.view = "species_forest"
+                    st.rerun()
+                st.button("⬅️ Retour à la liste des forêts", on_click=lambda: st.session_state.update({"view": "start","selected_foret": None}))
 
         # Vue filtre par parcelle
         elif st.session_state.view == "parcelle_view":
