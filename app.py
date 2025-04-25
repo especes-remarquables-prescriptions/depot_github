@@ -243,7 +243,7 @@ if "authenticated" not in st.session_state:
 st.markdown("""
     <style>
         .header-banner {
-            background-color: rgba(183, 28, 28, 0.2);  /* Rouge transparent */
+            background-color: rgba(220, 220, 220, 0.9); /* Gris clair avec transparence */
             color: black;  /* Texte noir */
             padding: 6px 10px;
             text-align: center;
@@ -254,14 +254,13 @@ st.markdown("""
             left: 0;
             width: 100%;
             z-index: 999999;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);}
     </style>
 """, unsafe_allow_html=True)
 
 # HTML pour le bandeau
 st.markdown("""
     <div class="header-banner">
-        🚧####🚧<b>OUTIL EN COURS DE DEVELOPPEMENT<b>🚧####🚧<b>SEAP ONF NORMANDIE<b>🚧####🚧
+        🚧🚧🚧🚧OUTIL EN COURS DE DEVELOPPEMENT🚧🚧🚧🚧SEAP ONF NORMANDIE🚧🚧🚧🚧
     </div>
 """, unsafe_allow_html=True)
 
