@@ -262,7 +262,7 @@ st.markdown("""
 # HTML pour le bandeau
 st.markdown("""
     <div class="header-banner">
-        ####     OUTIL EN COURS DE DEVELOPPEMENT     ####     SEAP ONF NORMANDIE     ####     OUTIL EN COURS DE DEVELOPPEMENT     ####     SEAP ONF NORMANDIE     ####     OUTIL EN COURS DE DEVELOPPEMENT     ####     SEAP ONF NORMANDIE     ####     OUTIL EN COURS DE DEVELOPPEMENT     ####     SEAP ONF NORMANDIE     ####
+        🚧####🚧<b>OUTIL EN COURS DE DEVELOPPEMENT<b>🚧####🚧<b>SEAP ONF NORMANDIE<b>🚧####🚧
     </div>
 """, unsafe_allow_html=True)
 
