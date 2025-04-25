@@ -340,7 +340,7 @@ if st.session_state.authenticated:
             padding: 1.5rem;
             border-radius: 10px;
             border: 1px solid rgba(255, 0, 0, 0.3);
-            font-size: 1.1rem;
+            font-size: 22px;
             line-height: 1.6;
             ">
             L'indice de <b>priorité de conservation</b> intègre la menace d'extinction au niveau régional et national, ainsi que la responsabilité de la Normandie dans la conservation de l'espèce. La méthode utilisée pour calculer cet indice se base sur les travaux de Barneix et Gigot (2013) et sur les initiatives de hiérarchisation qui ont découlé de ces travaux à l'échelle des régions françaises. 
@@ -351,6 +351,7 @@ if st.session_state.authenticated:
 
         st.markdown("""
         <div style='font-size:22px'>
+            <br><br>
             Ces deux indices permettront de hiérarchiser les enjeux et de prioriser les clauses environnementales.
             <br><br>
             ⬅️ Utilisez le menu à gauche pour consulter les espèces remarquables présentes en forêt et accéder aux statuts et prescriptions.
