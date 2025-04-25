@@ -136,7 +136,6 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
         st.warning("Aucune espèce à afficher pour cette sélection.")
         return
 
-    st.markdown (f"Détails des espèces remarquables pour la parcelle {selected_parcelle}")
     st.dataframe(df_filtré)
 
     # Création d’un mapping lisible : {cd_nom: "Espèce"}
@@ -417,6 +416,7 @@ if st.session_state.authenticated:
                 afficher_carte(df_parcelle, titre=f"📍 Espèces remarquables dans la parcelle {selected_parcelle}")
 
                 if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la parcelle"):
+                    st.markdown (f"Détails des espèces remarquables pour la parcelle {selected_parcelle}")
                     st.session_state.view = "species_parcelle"
                     st.rerun()
 
