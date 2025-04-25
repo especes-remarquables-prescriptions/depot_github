@@ -331,16 +331,31 @@ if st.session_state.authenticated:
             <br>
             Les espèces ont été hiérarchisées selon deux indices, un indice de priorité de conservation et un indice de priorité réglementaire. 
             <br><br>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div style="
+            background-color: rgba(255, 0, 0, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            ">
             L'indice de <b>priorité de conservation</b> intègre la menace d'extinction au niveau régional et national, ainsi que la responsabilité de la Normandie dans la conservation de l'espèce. La méthode utilisée pour calculer cet indice se base sur les travaux de Barneix et Gigot (2013) et sur les initiatives de hiérarchisation qui ont découlé de ces travaux à l'échelle des régions françaises. 
             <br><br>
             L'indice de <b>priorité réglementaire</b> intègre les différents types de réglementation (Directives européennes, protection par arreté) et les subtilités d'interprétation des articles d'arrêtés. En effet, certains articles protègent uniquement les spécimens et d'autres articles protègent, en plus des spécimens, les éléments nécessaires au bon fonctionnement du cycle biologique de l'espèce, incluant notamment les sites de reproduction et de repos. Enfin, cet indice prend en compte le risque que l'ONF entrave ces réglementations. En effet, pour certaines espèces très communes comme la mésange bleue, le risque réglementaire est très faible étant donné que la conservation de l'espèce à l'échelle du massif est assurée par la gestion classique de l'ONF.
-            <br><br>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div style='font-size:22px'>
             Ces deux indices permettront de hiérarchiser les enjeux et de prioriser les clauses environnementales.
             <br><br>
             ⬅️ Utilisez le menu à gauche pour consulter les espèces remarquables présentes en forêt et accéder aux statuts et prescriptions.
         </div>
         """, unsafe_allow_html=True)
-
 
     # --------------------- PAGE FORÊT ---------------------
 
@@ -378,7 +393,7 @@ if st.session_state.authenticated:
                     st.session_state.view = "species_forest"
                     st.rerun()
                 st.button("⬅️ Retour à la liste des forêts", on_click=lambda: st.session_state.update({"view": "start","selected_foret": None}))
-                
+
             afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
 
         # Vue filtre par parcelle
