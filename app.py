@@ -255,12 +255,6 @@ st.markdown("""
             width: 100%;
             z-index: 999999;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid #fff;  /* Ajouter une bordure en bas pour plus de visibilité */
-        }
-
-        /* Ajouter un espace en haut de la page pour éviter que le contenu soit caché par le bandeau */
-        .main {
-            padding-top: 60px;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -268,7 +262,7 @@ st.markdown("""
 # HTML pour le bandeau
 st.markdown("""
     <div class="header-banner">
-        #### OUTIL EN COURS DE DEVELOPPEMENT #### SEAP ONF NORMANDIE ####
+        ####     OUTIL EN COURS DE DEVELOPPEMENT     ####     SEAP ONF NORMANDIE     ####     OUTIL EN COURS DE DEVELOPPEMENT     ####     SEAP ONF NORMANDIE     ####     OUTIL EN COURS DE DEVELOPPEMENT     ####     SEAP ONF NORMANDIE     ####     OUTIL EN COURS DE DEVELOPPEMENT     ####     SEAP ONF NORMANDIE     ####
     </div>
 """, unsafe_allow_html=True)
 
