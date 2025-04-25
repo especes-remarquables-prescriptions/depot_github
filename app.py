@@ -252,7 +252,8 @@ st.markdown("""
             position: fixed;
             top: 0;
             width: 100%;
-            z-index: 9999;
+            z-index: 10000; /* Assurer que le bandeau soit bien en dessus */
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1); /* Ajout d'une ombre pour plus de visibilité */
         }
     </style>
     <div class="header-banner">
