@@ -244,7 +244,7 @@ st.markdown("""
     <style>
         .header-banner {
             background-color: #A1887F;  /* Marron */
-            color: #B71C1C;  /* Rouge */
+            color: #FF0000;  /* Rouge */
             padding: 6px 10px;
             text-align: center;
             font-size: 18px;
