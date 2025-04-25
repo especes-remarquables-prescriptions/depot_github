@@ -78,7 +78,7 @@ def afficher_carte(df, titre="📍 Localisation des espèces"):
     lon_centre = df["Coordonnée 1"].mean()
 
     # Création de la carte Folium
-    m = folium.Map(location=[lat_centre, lon_centre], zoom_start=13)
+    m = folium.Map(location=[lat_centre, lon_centre], zoom_start=13, control_scale=True)
 
     # Ajout du fond de carte cadastre (WMS IGN)
     folium.raster_layers.WmsTileLayer(
@@ -115,8 +115,9 @@ def afficher_carte(df, titre="📍 Localisation des espèces"):
     folium.LayerControl().add_to(m)
 
     # Affichage dans Streamlit
-    st.markdown(f"### {titre}")
-    st_folium(m, width=900, height=600)
+    with st.container():
+        st.markdown(f"### {titre}")
+        st_folium(m, width=900, height=600, returned_objects=[], use_container_width=False)
 
 
 # Fonction d'affichage des statuts et prescriptions
