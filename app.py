@@ -353,6 +353,9 @@ if st.session_state.authenticated:
             st.session_state.selected_parcelle = None
         if "view" not in st.session_state:
             st.session_state.view = 'start'
+        if st.session_state.get("first_load", True):
+            st.session_state.first_load = False
+            st.rerun()
 
         # Sélection de la forêt
         if st.session_state.selected_foret is None:
@@ -366,7 +369,7 @@ if st.session_state.authenticated:
         elif st.session_state.view == "forest_view":
             foret = st.session_state.selected_foret
             df_foret = df[df['Forêt'] == foret]
-            st.markdown("Forêt sélectionnée : {foret}")
+            st.markdown(f"Forêt sélectionnée : {foret}")
             afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
             
             with st.container ():
