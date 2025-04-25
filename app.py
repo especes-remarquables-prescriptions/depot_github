@@ -243,24 +243,24 @@ if "authenticated" not in st.session_state:
 st.markdown("""
     <style>
         .header-banner {
-            background-color: #6F4F37;  /* Marron */
-            color: #FF0000;  /* Rouge */
-            padding: 10px;
+            background-color: #A1887F;  /* Marron */
+            color: #B71C1C;  /* Rouge */
+            padding: 6px 10px;
             text-align: center;
-            font-size: 22px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 500;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 999999;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border-bottom: 3px solid #fff;  /* Ajouter une bordure en bas pour plus de visibilité */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #fff;  /* Ajouter une bordure en bas pour plus de visibilité */
         }
 
         /* Ajouter un espace en haut de la page pour éviter que le contenu soit caché par le bandeau */
         .main {
-            padding-top: 80px;
+            padding-top: 60px;
         }
     </style>
 """, unsafe_allow_html=True)
