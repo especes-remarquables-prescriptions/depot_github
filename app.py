@@ -117,7 +117,7 @@ def afficher_carte(df, titre="📍 Localisation des espèces"):
     # Affichage dans Streamlit
     with st.container():
         st.markdown(f"### {titre}")
-        st_folium(m, width=800, height=400, returned_objects=[], use_container_width=False)
+        st_folium(m, width=900, height=600, returned_objects=[], use_container_width=False)
 
 
 # Fonction d'affichage des statuts et prescriptions
@@ -356,18 +356,15 @@ if st.session_state.authenticated:
         elif st.session_state.view == "forest_view":
             foret = st.session_state.selected_foret
             df_foret = df[df['Forêt'] == foret]
-            
-            with st.container():
-                afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
+            afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
             st.write("")
-            with st.container():
-                if st.button("📌 Filtrer par parcelle"):
-                    st.session_state.view = "parcelle_view"
-                    st.rerun()
-                if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la forêt"):
-                    st.session_state.view = "species_forest"
-                    st.rerun()
-                st.button("⬅️ Retour à la liste des forêts", on_click=reset_all)
+            if st.button("📌 Filtrer par parcelle"):
+                st.session_state.view = "parcelle_view"
+                st.rerun()
+            if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la forêt"):
+                st.session_state.view = "species_forest"
+                st.rerun()
+            st.button("⬅️ Retour à la liste des forêts", on_click=lambda: st.session_state.update({"view": "start","selected_foret": None}))
 
         # Vue filtre par parcelle
         elif st.session_state.view == "parcelle_view":
