@@ -351,7 +351,7 @@ if st.session_state.authenticated:
 
         st.markdown("""
         <div style='font-size:22px'>
-            <br><br>
+            <br>
             Ces deux indices permettront de hiérarchiser les enjeux et de prioriser les clauses environnementales.
             <br><br>
             ⬅️ Utilisez le menu à gauche pour consulter les espèces remarquables présentes en forêt et accéder aux statuts et prescriptions.
