@@ -355,7 +355,9 @@ if st.session_state.authenticated:
         elif st.session_state.view == "forest_view":
             foret = st.session_state.selected_foret
             df_foret = df[df['Forêt'] == foret]
-            afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
+            
+            with st.container():
+                afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
 
             with st.container():
                 if st.button("📌 Filtrer par parcelle"):
