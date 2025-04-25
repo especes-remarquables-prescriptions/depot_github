@@ -347,7 +347,7 @@ if st.session_state.authenticated:
         # Sélection de la forêt
         if st.session_state.selected_foret is None:
             selected_foret = st.selectbox("🌲 Sélectionnez une forêt :", [""] + sorted(forets))
-            if st.button("🔍Voir les espèces remarquables par parcelle") and selected_foret:
+            if selected_foret:
                 st.session_state.selected_foret = selected_foret
                 st.session_state.view = "forest_view"
                 st.rerun()
