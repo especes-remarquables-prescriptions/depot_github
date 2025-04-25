@@ -73,6 +73,16 @@ def afficher_carte(df, titre="📍 Localisation des espèces"):
         st.warning("Aucune donnée à afficher pour cette sélection.")
         return
 
+    # Astuce CSS pour limiter la hauteur au chargement
+    st.markdown("""
+        <style>
+            .folium-map {
+                max-height: 650px;
+                overflow: hidden;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
     # Calcul du centre de la carte
     lat_centre = df["Coordonnée 2"].mean()
     lon_centre = df["Coordonnée 1"].mean()
