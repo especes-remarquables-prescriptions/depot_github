@@ -359,7 +359,7 @@ if st.session_state.authenticated:
             
             with st.container():
                 afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
-
+            st.write("")
             with st.container():
                 col1, col2, col3 = st.columns(3)
                 with col1:
