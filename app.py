@@ -253,13 +253,14 @@ st.markdown("""
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 9999;
+            z-index: 999999;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-bottom: 3px solid #fff;  /* Ajouter une bordure en bas pour plus de visibilité */
         }
 
         /* Ajouter un espace en haut de la page pour éviter que le contenu soit caché par le bandeau */
         .main {
-            padding-top: 60px;
+            padding-top: 80px;
         }
     </style>
 """, unsafe_allow_html=True)
