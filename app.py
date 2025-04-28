@@ -320,11 +320,18 @@ if st.session_state.authenticated:
     def load_reference_especes():
         df_reference = pd.read_excel('Metadonnees.xlsx')
         return df_reference
+    
+    # Chargement du fichier TAXREF pour la recherche intelligente par espèce
+    @st.cache_data
+    def load_especes():
+        df_especes = pd.read_excel('TAXREF18.0_FR_Continental.xlsx')
+        return df_especes
 
     # Exécution des fonctions de chargement
     df = load_data()
     codes_autorises = load_codes_autorises()
     df_reference = load_reference_especes()
+    df_especes = load_especes()
 
     # Nettoyage des colonnes pour garantir l'uniformité des CD_NOM
     df_reference['CD_NOM'] = df_reference['CD_NOM'].astype(str).str.strip()
@@ -478,126 +485,23 @@ if st.session_state.authenticated:
 
 
     elif page == "Recherche par espèce" :
-        st.markdown("### 🔎 Recherche par espèce")
-        st.markdown(
-        "<div style='font-size:20px;'>"
-        "Entrez un code CD_NOM :"
-        "</div>",
-        unsafe_allow_html=True
+        # Construction de la liste de choix (noms vernaculaires + noms valides)
+        df_especes['Nom_affichage'] = df_especes.apply(lambda x: f"{x['NOM_VERN']} ({x['NOM_VALIDE']})" if pd.notnull(x['NOM_VERN']) else x['NOM_VALIDE'], axis=1)
+
+        # Barre de recherche intelligente
+        choix = st.selectbox(
+            "🔎 Rechercher une espèce par nom vernaculaire ou scientifique :",
+            options=df_especes['Nom_affichage']
         )
-        search_cd_nom = st.text_input(label=" ", label_visibility="collapsed")
-        
-        st.markdown("""
-        <div style='font-size:20px'>
-        Si vous connaissez uniquement le nom de l'espèce, tapez-le dans la barre de recherche du site de l'INPN pour obtenir le CD_NOM : <a href='https://inpn.mnhn.fr/accueil/index' target='_blank'>inpn.mnhn.fr</a>
-        </div>
-        """, unsafe_allow_html=True)
 
-        st.image("inpn_ex.png", use_container_width=True)
+        # Lorsqu'une espèce est sélectionnée
+        if choix:
+            # Récupération du CD_NOM correspondant
+            ligne_selectionnee = df_especes[df_especes['Nom_affichage'] == choix].iloc[0]
+            cd_nom_selectionne = str(ligne_selectionnee['CD_NOM']).strip()
 
-        if search_cd_nom:
-            search_cd_nom = search_cd_nom.strip()
-            st.markdown("""
-                <style>
-                    div.stMarkdown p, div.stDataFrame, div.stSelectbox, div.stExpander, div[data-testid="stVerticalBlock"] {
-                        font-size: 20px !important;
-                    }
-                    div[data-testid="stMarkdownContainer"] {
-                        font-size: 20px !important;
-                    }
-                </style>
-            """, unsafe_allow_html=True)
-            match = df_reference[df_reference['CD_NOM'] == search_cd_nom]
-
-            st.subheader(f"📘 Statuts et prescriptions : {search_cd_nom}")
-
-            if not match.empty and str(match['Rôle_TFT'].iloc[0]).strip().upper() != "N.C.":
-                with st.container():
-                    nom_sci_brut = match['Nom_scientifique_valide'].iloc[0]
-
-                    # Supprime les balises HTML <i> et </i>
-                    nom_sci_sans_balise = nom_sci_brut.replace('<i>', '').replace('</i>', '')
-
-                    # Mets juste le nom scientifique en italique, pas l’auteur
-                    nom_en_italique = nom_sci_sans_balise.split(' (')[0]  # Prend juste "Sympetrum danae"
-                    auteur = nom_sci_sans_balise[len(nom_en_italique):]   # Récupère " (Sulzer, 1776)"
-
-                    # Combine le tout en Markdown
-                    nom_final = f"*{nom_en_italique}*{auteur}"
-                    st.markdown(f"**Nom scientifique :** {nom_final}")
-                    st.markdown(f"**Nom vernaculaire :** {match['Nom_vernaculaire'].iloc[0]}")
-                    st.markdown(f"**Catégorie naturaliste :** {match['Cat_naturaliste'].iloc[0]}")
-                    
-                    conserv_index = match['Indice_priorité_conservation'].iloc[0]
-                    color = get_conservation_color(conserv_index)
-
-                    st.markdown(f"""
-                        <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité de conservation ℹ️ :</b> {conserv_index}
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    reg_index = match['Indice_priorité_réglementaire'].iloc[0]
-                    color_reg = get_reglementaire_color(reg_index)
-
-                    st.markdown(f"""
-                        <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité réglementaire ℹ️ :</b> {reg_index}
-                        </div>
-                        """, unsafe_allow_html=True)
-
-                    st.markdown ("---")
-                    st.markdown(f"**Code unique clause :** {match['Code_unique'].iloc[0]}")
-                    st.markdown(f"**Condition d'application de la clause :** {match['Condition(s)_application_clause'].iloc[0]}")
-                    
-                    with st.expander("📋 Libellés des clauses à inscrire"):
-                        st.write(f"**Libellé Fiche chantier (TECK) :** {match['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
-                        st.write(f"**Libellé Fiche désignation (DESIGNATION MOBILE) :** {match['Libellé_fiche_désignation_ONF (DESIGNATION MOBILE)'].iloc[0]}")
-                        st.write(f"**Libellé Fiche vente (PRODUCTION BOIS) :** {match['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
-
-                    st.markdown(f"**Rôle du TFT :** {match['Rôle_TFT'].iloc[0]}")
-
-
-                    st.markdown ("---")
-                    with st.expander("ℹ️ Légende des indices de priorité"):
-                        st.markdown("""
-                        **Indice de priorité de conservation** :
-                        - `5` : Priorité de conservation majeure
-                        - `4` : Priorité de conservation très élevée 
-                        - `3` : Priorité de conservation élevée
-                        - `2` : Priorité de conservation modérée
-                        - `1` : Priorité de conservation faible
-
-                        **Indice de priorité réglementaire** :
-                        - `4` : Risque réglementaire majeur (Espèce réglementée au niveau européen + national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                        - `3` : Risque réglementaire élevé (Espèce réglementée au niveau national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                        - `2` : Risque réglementaire uniquement si les interventions forestières impactent les spécimens.
-                        - `1` : La gestion forestière courante de l'ONF suffit à respecter la réglementation associée à l'espèce, que ce soit sur les spécimens ou sur les éléments nécessaires au bon fonctionnement de leur cycle biologique.
-                        - `0` : Espèce non protégée.
-                        """)
-
-                    # Dictionnaire de correspondance
-                    respo_dict = {
-                            1: "Faible",
-                            2: "Modérée",
-                            3: "Significative",
-                            4: "Forte",
-                            5: "Majeure"
-                        }
-
-                    # Récupérer la valeur brute dans le tableau
-                    valeur_respo = match['Respo_reg'].iloc[0]
-
-                    # Traduire en texte si possible
-                    texte_respo = respo_dict.get(valeur_respo, "Non renseignée")
-
-                    with st.expander("🟢Détail des statuts"):
-                        st.write(f"**Liste rouge régionale :** {traduire_statut(match['LR_reg'].iloc[0])}")
-                        st.write(f"**Liste rouge nationale :** {traduire_statut(match['LR_nat'].iloc[0])}")
-                        st.write(f"**Responsabilité régionale :** {texte_respo}")
-                        st.write(f"**Directives européennes :** {traduire_statut(match['Directives_euro'].iloc[0])}")
-                        st.write(f"**Plan d'action :** {traduire_statut(match['Plan_action'].iloc[0])}")
-                        st.write(f"**Arrêté de protection :** {traduire_statut(match['Arrêté_protection'].iloc[0])}")
-                        st.write(f"**Article de l'arrêté :** {traduire_statut(match['Article_arrêté'].iloc[0])}")
+            # Vérification si le CD_NOM est autorisé
+            if cd_nom_selectionne in codes_autorises:
+                afficher_statuts_prescriptions(cd_nom_selectionne, df_reference)
             else:
-                st.info("❌ Il n'existe pas de prescription environnementale pour cette espèce.")
+                st.warning("🚫 Il n'existe pas de clause environnementale pour cette espèce.")
