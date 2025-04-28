@@ -1,5 +1,13 @@
 @echo off
 
+REM Naviguer dans le répertoire du dépôt
+cd ton-depot
+
+REM Mettre à jour le dépôt avec les dernières modifications
+git pull origin main
+
+echo Le dépôt a été mis à jour avec les dernières modifications depuis GitHub
+
 REM Ajout des modifications
 git add .
 
