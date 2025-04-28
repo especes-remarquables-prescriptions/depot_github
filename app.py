@@ -439,7 +439,6 @@ if st.session_state.authenticated:
             if selected_parcelle:
                 st.session_state.selected_parcelle = selected_parcelle
                 df_parcelle = df_foret[df_foret["Parcelle de forêt"] == selected_parcelle]
-                afficher_carte(df_parcelle, titre=f"📍 Espèces remarquables dans la parcelle {selected_parcelle}")
 
                 if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la parcelle"):
                     st.session_state.view = "species_parcelle"
@@ -448,6 +447,8 @@ if st.session_state.authenticated:
                 if st.button("⬅️ Retour à la carte de la forêt"):
                     st.session_state.update({"view": "forest_view", "selected_parcelle": None})
                     st.rerun
+
+                afficher_carte(df_parcelle, titre=f"📍 Espèces remarquables dans la parcelle {selected_parcelle}")
             
         # Statuts et prescriptions forêt
         elif st.session_state.view == "species_forest":
