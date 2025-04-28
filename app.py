@@ -321,17 +321,10 @@ if st.session_state.authenticated:
         df_reference = pd.read_excel('Metadonnees.xlsx')
         return df_reference
     
-    # Chargement du fichier TAXREF pour la recherche intelligente par espèce
-    @st.cache_data
-    def load_especes():
-        df_especes = pd.read_excel('TAXREF18.0_FR_Continental.xlsx')
-        return df_especes
-
     # Exécution des fonctions de chargement
     df = load_data()
     codes_autorises = load_codes_autorises()
     df_reference = load_reference_especes()
-    df_especes = load_especes()
 
     # Nettoyage des colonnes pour garantir l'uniformité des CD_NOM
     df_reference['CD_NOM'] = df_reference['CD_NOM'].astype(str).str.strip()
@@ -485,23 +478,34 @@ if st.session_state.authenticated:
 
 
     elif page == "Recherche par espèce" :
-        # Construction de la liste de choix (noms vernaculaires + noms valides)
-        df_especes['Nom_affichage'] = df_especes.apply(lambda x: f"{x['NOM_VERN']} ({x['NOM_VALIDE']})" if pd.notnull(x['NOM_VERN']) else x['NOM_VALIDE'], axis=1)
-
-        # Barre de recherche intelligente
-        choix = st.selectbox(
-            "🔎 Rechercher une espèce par nom vernaculaire ou scientifique :",
-            options=df_especes['Nom_affichage']
+        st.markdown("### 🔎 Recherche par espèce")
+        st.markdown(
+        "<div style='font-size:20px;'>"
+        "Entrez un code CD_NOM :"
+        "</div>",
+        unsafe_allow_html=True
         )
+        search_cd_nom = st.text_input(label=" ", label_visibility="collapsed")
+        
+        st.markdown("""
+        <div style='font-size:20px'>
+        Si vous connaissez uniquement le nom de l'espèce, tapez-le dans la barre de recherche du site de l'INPN pour obtenir le CD_NOM : <a href='https://inpn.mnhn.fr/accueil/index' target='_blank'>inpn.mnhn.fr</a>
+        </div>
+        """, unsafe_allow_html=True)
 
-        # Lorsqu'une espèce est sélectionnée
-        if choix:
-            # Récupération du CD_NOM correspondant
-            ligne_selectionnee = df_especes[df_especes['Nom_affichage'] == choix].iloc[0]
-            cd_nom_selectionne = str(ligne_selectionnee['CD_NOM']).strip()
+        st.image("inpn_ex.png", use_container_width=True)
 
-            # Vérification si le CD_NOM est autorisé
-            if cd_nom_selectionne in codes_autorises:
-                afficher_statuts_prescriptions(cd_nom_selectionne, df_reference)
-            else:
-                st.warning("🚫 Il n'existe pas de clause environnementale pour cette espèce.")
+        if search_cd_nom:
+            search_cd_nom = search_cd_nom.strip()
+            st.markdown("""
+                <style>
+                    div.stMarkdown p, div.stDataFrame, div.stSelectbox, div.stExpander, div[data-testid="stVerticalBlock"] {
+                        font-size: 20px !important;
+                    }
+                    div[data-testid="stMarkdownContainer"] {
+                        font-size: 20px !important;
+                    }
+                </style>
+            """, unsafe_allow_html=True)
+            
+            afficher_statuts_prescriptions(search_cd_nom, df_reference)
