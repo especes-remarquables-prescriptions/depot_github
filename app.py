@@ -445,7 +445,9 @@ if st.session_state.authenticated:
                     st.session_state.view = "species_parcelle"
                     st.rerun()
 
-            st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view", "selected_parcelle": None}))
+                if st.button("⬅️ Retour à la carte de la forêt"):
+                    st.session_state.update({"view": "forest_view", "selected_parcelle": None})
+                    st.rerun
             
         # Statuts et prescriptions forêt
         elif st.session_state.view == "species_forest":
