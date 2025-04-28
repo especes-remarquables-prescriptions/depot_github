@@ -446,7 +446,6 @@ if st.session_state.authenticated:
 
                 if st.button("⬅️ Retour à la carte de la forêt"):
                     st.session_state.update({"view": "forest_view", "selected_parcelle": None})
-                    st.rerun
 
                 afficher_carte(df_parcelle, titre=f"📍 Espèces remarquables dans la parcelle {selected_parcelle}")
             
