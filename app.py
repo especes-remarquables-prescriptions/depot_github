@@ -231,7 +231,7 @@ st.set_page_config(page_title="Espèces remarquables et prescriptions", page_ico
 # --------------------- AUTHENTIFICATION --------------
 
 # Définir un mot de passe correct
-PASSWORD = "caprimulguse"
+PASSWORD = "caprimulgus"
 
 # Initialiser une session pour suivre l'état de l'utilisateur
 if "authenticated" not in st.session_state:
