@@ -451,6 +451,7 @@ if st.session_state.authenticated:
             
         # Statuts et prescriptions forêt
         elif st.session_state.view == "species_forest":
+            st.markdown (f" ### Détails des espèces remarquables pour la forêt : {st.session_state.selected_foret}")
             df_filtré = df[df['Forêt'] == st.session_state.selected_foret]
             afficher_statuts_prescriptions(df_filtré, df_reference)
 
@@ -458,7 +459,7 @@ if st.session_state.authenticated:
 
         # Statuts et prescriptions parcelle
         elif st.session_state.view == "species_parcelle":
-            st.markdown (f" ### Détails des espèces remarquables pour la parcelle {st.session_state.selected_parcelle}")
+            st.markdown (f" ### Détails des espèces remarquables pour la parcelle : {st.session_state.selected_parcelle}")
             df_filtré = df[
                 (df['Forêt'] == st.session_state.selected_foret) &
                 (df['Parcelle de forêt'] == st.session_state.selected_parcelle)
