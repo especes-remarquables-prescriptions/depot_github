@@ -1,7 +1,7 @@
 @echo off
 
 REM Naviguer dans le répertoire du dépôt
-cd ton-depot
+cd .\depot_github
 
 REM Mettre à jour le dépôt avec les dernières modifications
 git pull origin main
