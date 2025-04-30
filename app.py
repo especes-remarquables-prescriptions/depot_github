@@ -273,7 +273,7 @@ if not st.session_state.authenticated:
     import base64
 
     # Charger l'image locale et l'encoder en base64
-    file_path = "./depot_github/logo ONF.png"
+    file_path = "logo ONF.png"
 
     with open(file_path, "rb") as f:
         data = f.read()
