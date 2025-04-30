@@ -301,6 +301,13 @@ if st.session_state.authenticated:
     # Création d’un menu de navigation latéral
     page = st.sidebar.radio("Aller à :",["Accueil", "Recherche par forêt", "Recherche par espèce"], label_visibility="collapsed")
 
+    st.sidebar.markdown(
+            """
+            <div style="position: fixed; bottom: 0; left: 0; width: 100%; padding: 10px 0; text-align: center;">
+                <img src="https://github.com/especes-remarquables-prescriptions/depot_github/cigogne.png" width="100">
+            </div>
+            """, unsafe_allow_html=True )
+
 
     # --------------------- CHARGEMENT DES DONNÉES ---------------------
 
