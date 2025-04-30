@@ -371,6 +371,7 @@ if st.session_state.authenticated:
         # Texte de présentation
         st.markdown("""
         <div style='font-size:22px'>
+            <br><br>        
             Bienvenue dans l'outil de consultation des données d'espèces remarquables par forêt avec les prescriptions environnementales associées.
             <br><br>
             Une espèce est considérée remarquable si elle possède au moins un des statuts suivants :
@@ -424,6 +425,7 @@ if st.session_state.authenticated:
         st.markdown(
             f"""
             <div style="text-align: center;">
+                <br><br>
                 <br><br>
                 <img src="data:image/png;base64,{encoded}" width="250">
             </div>
