@@ -451,24 +451,24 @@ if st.session_state.authenticated:
             
         # Statuts et prescriptions forêt
         elif st.session_state.view == "species_forest":
+            st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view"}))
+
             st.markdown (f" ### Détails des espèces remarquables pour la forêt : {st.session_state.selected_foret}")
             df_filtré = df[df['Forêt'] == st.session_state.selected_foret]
             afficher_statuts_prescriptions(df_filtré, df_reference)
 
-            st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view"}))
-
         # Statuts et prescriptions parcelle
         elif st.session_state.view == "species_parcelle":
+            st.button("⬅️ Retour à la carte de la parcelle", on_click=lambda: st.session_state.update({"view": "parcelle_view", "selected_parcelle":st.session_state.selected_parcelle}))
+            
+            st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view"}))
+            
             st.markdown (f" ### Détails des espèces remarquables pour la parcelle : {st.session_state.selected_parcelle}")
             df_filtré = df[
                 (df['Forêt'] == st.session_state.selected_foret) &
                 (df['Parcelle de forêt'] == st.session_state.selected_parcelle)
             ]
             afficher_statuts_prescriptions(df_filtré, df_reference)
-
-            st.button("⬅️ Retour à la carte de la parcelle", on_click=lambda: st.session_state.update({"view": "parcelle_view", "selected_parcelle":st.session_state.selected_parcelle}))
-            
-            st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view"}))
 
     if st.session_state.get("reset_requested"):
         st.session_state.reset_requested = False
