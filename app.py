@@ -397,9 +397,9 @@ if st.session_state.authenticated:
             font-size: 22px;
             line-height: 1.6;
             ">
-            L'indice de <b>priorité de conservation</b> intègre la menace d'extinction au niveau régional et national, ainsi que la responsabilité de la Normandie dans la conservation de l'espèce. La méthode utilisée pour calculer cet indice se base sur les travaux de Barneix et Gigot (2013) et sur les initiatives de hiérarchisation qui ont découlé de ces travaux à l'échelle des régions françaises. 
+            *L'indice de <b>priorité de conservation</b> intègre la menace d'extinction au niveau régional et national, ainsi que la responsabilité de la Normandie dans la conservation de l'espèce. La méthode utilisée pour calculer cet indice se base sur les travaux de Barneix et Gigot (2013) et sur les initiatives de hiérarchisation qui ont découlé de ces travaux à l'échelle des régions françaises.*
             <br><br>
-            L'indice de <b>priorité réglementaire</b> intègre les différents types de réglementation (Directives européennes, protection par arreté) et les subtilités d'interprétation des articles d'arrêtés. En effet, certains articles protègent uniquement les spécimens et d'autres articles protègent, en plus des spécimens, les éléments nécessaires au bon fonctionnement du cycle biologique de l'espèce, incluant notamment les sites de reproduction et de repos. Enfin, cet indice prend en compte le risque que l'ONF entrave ces réglementations. En effet, pour certaines espèces très communes comme la mésange bleue, le risque réglementaire est très faible étant donné que la conservation de l'espèce à l'échelle du massif est assurée par la gestion classique de l'ONF.
+            *L'indice de <b>priorité réglementaire</b> intègre les différents types de réglementation (Directives européennes, protection par arreté) et les subtilités d'interprétation des articles d'arrêtés. En effet, certains articles protègent uniquement les spécimens et d'autres articles protègent, en plus des spécimens, les éléments nécessaires au bon fonctionnement du cycle biologique de l'espèce, incluant notamment les sites de reproduction et de repos. Enfin, cet indice prend en compte le risque que l'ONF entrave ces réglementations. En effet, pour certaines espèces très communes comme la mésange bleue, le risque réglementaire est très faible étant donné que la conservation de l'espèce à l'échelle du massif est assurée par la gestion classique de l'ONF.*
         </div>
         """, unsafe_allow_html=True)
 
@@ -411,28 +411,6 @@ if st.session_state.authenticated:
             ⬅️ Utilisez le menu à gauche pour consulter les espèces remarquables présentes en forêt et accéder aux statuts et prescriptions.
         </div>
         """, unsafe_allow_html=True)
-
-        import base64
-
-        # Charger l'image locale et l'encoder en base64
-        file_path = "cigno.png"
-        
-        with open(file_path, "rb") as f:
-            data = f.read()
-            encoded = base64.b64encode(data).decode()
-
-        # Afficher l'image centrée via HTML
-        st.markdown(
-            f"""
-            <div style="text-align: center;">
-                <br><br>
-                <br><br>
-                <img src="data:image/png;base64,{encoded}" width="250">
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
         
     # --------------------- PAGE FORÊT ---------------------
 
