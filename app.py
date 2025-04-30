@@ -307,7 +307,7 @@ if not st.session_state.authenticated:
 if st.session_state.authenticated:
 
     # Insertion du logo et configuration de la barre latérale
-    st.sidebar.image(".\depot_github\logo ONF.png", width=250)
+    st.sidebar.image("logo ONF.png", width=250)
     st.sidebar.title("Navigation")
 
     st.sidebar.markdown("<div style='font-size:20px;'>Aller à :</div>", unsafe_allow_html=True)
@@ -334,18 +334,18 @@ if st.session_state.authenticated:
     # Chargement du fichier principal contenant les observations de la Base de données naturalistes de l'ONF
     @st.cache_data
     def load_data():
-        return pd.read_excel('.\depot_github\MonExportBdn.xlsx')
+        return pd.read_excel('MonExportBdn.xlsx')
 
     # Chargement de la liste des codes CD_NOM autorisés (filtrage pour avoir uniquement les espèces du tableau de métadonnées des espèces remarquables)
     @st.cache_data
     def load_codes_autorises():
-        df_codes = pd.read_excel('.\depot_github\Metadonnees.xlsx')
+        df_codes = pd.read_excel('Metadonnees.xlsx')
         return df_codes['CD_NOM'].astype(str).str.strip().tolist()
 
     # Chargement du fichier de référence des espèces avec leurs métadonnées
     @st.cache_data
     def load_reference_especes():
-        df_reference = pd.read_excel('.\depot_github\Metadonnees.xlsx')
+        df_reference = pd.read_excel('Metadonnees.xlsx')
         return df_reference
     
     # Exécution des fonctions de chargement
@@ -414,7 +414,7 @@ if st.session_state.authenticated:
         import base64
 
         # Charger l'image locale et l'encoder en base64
-        file_path = ".\depot_github\cigno.png"
+        file_path = "cigno.png"
         
         with open(file_path, "rb") as f:
             data = f.read()
@@ -542,7 +542,7 @@ if st.session_state.authenticated:
         </div>
         """, unsafe_allow_html=True)
 
-        st.image(".\depot_github\inpn_ex.png", use_container_width=True)
+        st.image("inpn_ex.png", use_container_width=True)
 
         if search_cd_nom:
             search_cd_nom = search_cd_nom.strip()
