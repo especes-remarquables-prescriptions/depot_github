@@ -1,9 +1,9 @@
 [theme]
-base="light"
-primaryColor="#2E8B57"
-backgroundColor="#F5FFF5"
-secondaryBackgroundColor="#E8F5E9"
-textColor="#202020"
+base = "light"
+primaryColor = "#2E7D32"  # Vert forêt profond (identité ONF)
+backgroundColor = "#F9FBF9"  # Très clair, légèrement vert/gris
+secondaryBackgroundColor = "#DDEEDD"  # Vert doux, apaisant
+textColor = "#1B1B1B"  # Gris anthracite, meilleure lisibilité
 font="sans serif"
 runOnSave = true
 gatherUsageStats = false

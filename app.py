@@ -264,10 +264,34 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
+
+# ------------------------INTERFACE--------------------------
+
+
 # Si l'utilisateur n'est pas encore connecté
 if not st.session_state.authenticated:
+    import base64
+
+    # Charger l'image locale et l'encoder en base64
+    file_path = ".\depot_github\logo ONF.png"
+    with open(file_path, "rb") as f:
+        data = f.read()
+        encoded = base64.b64encode(data).decode()
+
+    # Afficher l'image centrée via HTML
+    st.markdown(
+        f"""
+        <div style="text-align: center;">
+            <img src="data:image/png;base64,{encoded}" width="250">
+            <br><br>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
     with st.form("login_form"):
-        st.write("### Entrez le mot de passe pour accéder à l'application")
+        st.write("### 🦋 Espèces remarquables et prescriptions")
         password_input = st.text_input("Mot de passe", type="password")
         submitted = st.form_submit_button("Se connecter")
 
@@ -282,8 +306,9 @@ if not st.session_state.authenticated:
 if st.session_state.authenticated:
 
     # Insertion du logo et configuration de la barre latérale
-    st.sidebar.image("logo ONF.png", width=200)
+    st.sidebar.image(".\depot_github\logo ONF.png", width=250)
     st.sidebar.title("Navigation")
+
     st.sidebar.markdown("<div style='font-size:20px;'>Aller à :</div>", unsafe_allow_html=True)
 
     # Application d'un style personnalisé aux composants pour agrandir les polices
@@ -298,15 +323,9 @@ if st.session_state.authenticated:
                 </style>
             """, unsafe_allow_html=True)
 
+
     # Création d’un menu de navigation latéral
     page = st.sidebar.radio("Aller à :",["Accueil", "Recherche par forêt", "Recherche par espèce"], label_visibility="collapsed")
-
-    st.sidebar.markdown(
-            """
-            <div style="position: fixed; bottom: 0; left: 0; width: 100%; padding: 10px 0; text-align: center;">
-                <img src="https://github.com/especes-remarquables-prescriptions/depot_github/cigogne.png" width="100">
-            </div>
-            """, unsafe_allow_html=True )
 
 
     # --------------------- CHARGEMENT DES DONNÉES ---------------------
@@ -314,18 +333,18 @@ if st.session_state.authenticated:
     # Chargement du fichier principal contenant les observations de la Base de données naturalistes de l'ONF
     @st.cache_data
     def load_data():
-        return pd.read_excel('MonExportBdn.xlsx')
+        return pd.read_excel('.\depot_github\MonExportBdn.xlsx')
 
     # Chargement de la liste des codes CD_NOM autorisés (filtrage pour avoir uniquement les espèces du tableau de métadonnées des espèces remarquables)
     @st.cache_data
     def load_codes_autorises():
-        df_codes = pd.read_excel('Metadonnees.xlsx')
+        df_codes = pd.read_excel('.\depot_github\Metadonnees.xlsx')
         return df_codes['CD_NOM'].astype(str).str.strip().tolist()
 
     # Chargement du fichier de référence des espèces avec leurs métadonnées
     @st.cache_data
     def load_reference_especes():
-        df_reference = pd.read_excel('Metadonnees.xlsx')
+        df_reference = pd.read_excel('.\depot_github\Metadonnees.xlsx')
         return df_reference
     
     # Exécution des fonctions de chargement
@@ -391,11 +410,32 @@ if st.session_state.authenticated:
         </div>
         """, unsafe_allow_html=True)
 
+        import base64
+
+        # Charger l'image locale et l'encoder en base64
+        file_path = ".\depot_github\cigno.png"
+        
+        with open(file_path, "rb") as f:
+            data = f.read()
+            encoded = base64.b64encode(data).decode()
+
+        # Afficher l'image centrée via HTML
+        st.markdown(
+            f"""
+            <div style="text-align: center;">
+                <br><br>
+                <img src="data:image/png;base64,{encoded}" width="250">
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        
     # --------------------- PAGE FORÊT ---------------------
 
 
     if page == "Recherche par forêt":
-
+        st.markdown("### 🔎 Recherche par forêt")
         if 'selected_foret' not in st.session_state:
             st.session_state.selected_foret = None
         if 'selected_parcelle' not in st.session_state:
@@ -408,7 +448,7 @@ if st.session_state.authenticated:
 
         # Sélection de la forêt
         if st.session_state.selected_foret is None:
-            selected_foret = st.selectbox("🌲 Sélectionnez une forêt :", [""] + sorted(forets))
+            selected_foret = st.selectbox("Sélectionnez une forêt🌲:", [""] + sorted(forets))
             if selected_foret:
                 st.session_state.selected_foret = selected_foret
                 st.session_state.view = "forest_view"
@@ -501,7 +541,7 @@ if st.session_state.authenticated:
         </div>
         """, unsafe_allow_html=True)
 
-        st.image("inpn_ex.png", use_container_width=True)
+        st.image(".\depot_github\inpn_ex.png", use_container_width=True)
 
         if search_cd_nom:
             search_cd_nom = search_cd_nom.strip()
