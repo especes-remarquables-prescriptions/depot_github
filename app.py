@@ -179,7 +179,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
 
             st.markdown ("---")
             st.markdown(f"**Code unique clause :** {species_reference_info['Code_unique'].iloc[0]}")
-            st.markdown(f"**Condition d'application de la clause :** {species_reference_info['Condition(s)_application_clause'].iloc[0]}")
+            st.markdown(f"**Condition d'application de la clause <b>/!\ Uniquement dans les limites de la parcelle considérée /!\</b> :** {species_reference_info['Condition(s)_application_clause'].iloc[0]}")
 
             with st.expander("📋 Libellés des clauses à inscrire"):
                 st.write(f"**Fiche chantier (TECK) :** {species_reference_info['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
@@ -216,7 +216,20 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 st.write(f"**Responsabilité régionale :** {texte_respo}")
                 st.write(f"**Directives européennes :** {traduire_statut(species_reference_info['Directives_euro'].iloc[0])}")
                 st.write(f"**Plan d'action :** {traduire_statut(species_reference_info['Plan_action'].iloc[0])}")
-                st.write(f"**Arrêté de protection :** {traduire_statut(species_reference_info['Arrêté_protection'].iloc[0])}")
+                # Récupération des 3 colonnes concernées
+                apn = species_reference_info['Arrêté_protection_nationale'].iloc[0]
+                ap_bn = species_reference_info['Arrêté_protection_BN'].iloc[0]
+                ap_hn = species_reference_info['Arrêté_protection_HN'].iloc[0]
+
+                # On filtre uniquement les valeurs différentes de "N.C."
+                valeurs_protection = [apn, ap_bn, ap_hn]
+                valeurs_non_nc = [v for v in valeurs_protection if str(v).strip() != "N.C."]
+
+                # Affichage
+                if valeurs_non_nc:
+                    st.write(f"**Arrêté de protection :** {', '.join(valeurs_non_nc)}")
+                else:
+                    st.write("**Arrêté de protection :** N.C.")
                 st.write(f"**Article de l'arrêté :** {traduire_statut(species_reference_info['Article_arrêté'].iloc[0])}")
         else:
             st.info("❌ Cette espèce ne fait pas l'objet de prescription environnementale.")
