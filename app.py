@@ -159,7 +159,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
         st.subheader(f"📘 Statuts et prescriptions : {selected_label}")
 
         if not species_reference_info.empty and pd.notna(species_reference_info['Rôle_TFT'].iloc[0]) and str(species_reference_info['Rôle_TFT'].iloc[0]).strip():
-            nom_sci_brut = species_reference_info['Nom_scientifique_valide'].iloc[0]
+            nom_sci_brut = species_reference_info['Nom_scientifique_valide_html'].iloc[0]
             nom_sci_sans_balise = nom_sci_brut.replace('<i>', '').replace('</i>', '')
             nom_en_italique = nom_sci_sans_balise.split(' (')[0]
             auteur = nom_sci_sans_balise[len(nom_en_italique):]
