@@ -555,7 +555,7 @@ if st.session_state.authenticated:
 
             if not match.empty and str(match['Rôle_TFT'].iloc[0]).strip().upper() != "N.C.":
                 with st.container():
-                    nom_sci_brut = match['Nom_scientifique_valide'].iloc[0]
+                    nom_sci_brut = match['Nom_scientifique_valide_html'].iloc[0]
 
                     # Supprime les balises HTML <i> et </i>
                     nom_sci_sans_balise = nom_sci_brut.replace('<i>', '').replace('</i>', '')
