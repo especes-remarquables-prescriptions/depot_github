@@ -225,7 +225,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 if valeurs_non_nc:
                     st.write(f"**Arrêté de protection :** {', '.join(valeurs_non_nc)}")
                 else:
-                    st.write("**Arrêté de protection :** Non concerné")
+                    st.write("**Arrêté de protection :** Non Concerné")
                 st.write(f"**Article de l'arrêté :** {traduire_statut(species_reference_info['Article_arrêté'].iloc[0])}")
         else:
             st.info("❌ Cette espèce ne fait pas l'objet de prescription environnementale.")
@@ -551,18 +551,7 @@ if st.session_state.authenticated:
 
             if not match.empty and str(match['Rôle_TFT'].iloc[0]).strip().upper() != "N.C.":
                 with st.container():
-                    nom_sci_brut = match['Nom_scientifique_valide_html'].iloc[0]
-
-                    # Supprime les balises HTML <i> et </i>
-                    nom_sci_sans_balise = nom_sci_brut.replace('<i>', '').replace('</i>', '')
-
-                    # Mets juste le nom scientifique en italique, pas l’auteur
-                    nom_en_italique = nom_sci_sans_balise.split(' (')[0]  # Prend juste "Sympetrum danae"
-                    auteur = nom_sci_sans_balise[len(nom_en_italique):]   # Récupère " (Sulzer, 1776)"
-
-                    # Combine le tout en Markdown
-                    nom_final = f"*{nom_en_italique}*{auteur}"
-                    st.markdown(f"**Nom scientifique :** {nom_final}")
+                    st.markdown(f"**Nom scientifique :** {match['Nom_scientifique_valide_html'].iloc[0]}")
                     st.markdown(f"**Nom vernaculaire :** {match['Nom_vernaculaire'].iloc[0]}")
                     st.markdown(f"**Catégorie naturaliste :** {match['Cat_naturaliste'].iloc[0]}")
                     
@@ -649,7 +638,7 @@ if st.session_state.authenticated:
                         if valeurs_non_nc:
                             st.write(f"**Arrêté de protection :** {', '.join(valeurs_non_nc)}")
                         else:
-                            st.write("**Arrêté de protection :** N.C.")
+                            st.write("**Arrêté de protection :** Non Concerné")
                         st.write(f"**Article de l'arrêté :** {traduire_statut(match['Article_arrêté'].iloc[0])}")
             else:
                 st.info("❌ Il n'existe pas de prescription environnementale pour cette espèce.")
