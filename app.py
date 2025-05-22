@@ -372,7 +372,10 @@ if st.session_state.authenticated:
 
     # Nettoyage des colonnes pour garantir l'uniformité des CD_NOM
     df_reference['CD_NOM'] = df_reference['CD_NOM'].astype(str).str.strip()
-    df_especes['CD_NOM'] = df_especes['CD_NOM'].astype(str).str.strip()
+    
+    df_especes = df_especes[df_especes['CD_NOM'].apply(lambda x: isinstance(x, (int, float, str)))]
+    df_especes['CD_NOM'] = df_especes['CD_NOM'].astype(str).fillna("").str.strip()
+
     df["Code taxon (cd_nom)"] = df["Code taxon (cd_nom)"].astype(str).str.split(',')
     df = df.explode("Code taxon (cd_nom)").copy() # Une ligne par taxon si plusieurs dans une même cellule
     df["Code taxon (cd_nom)"] = df["Code taxon (cd_nom)"].str.strip()
