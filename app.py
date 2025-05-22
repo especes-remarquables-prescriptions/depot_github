@@ -152,9 +152,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
             <b>Coordonnée 1 :</b> {row["Coordonnée 1"]}<br>
             <b>Coordonnée 2 :</b> {row["Coordonnée 2"]}<br>
             <b>Système de coordonnées :</b> {row.get("Système de coordonnées", '')}<br>
-            <b>Précision de la localisation :</b> {row.get("Précision de la localisation", '')}<br>
-            <b>Indice conservation :</b> {row.get("Indice_priorité_conservation", 'NA')}<br>
-            <b>Indice réglementaire :</b> {row.get("Indice_priorité_réglementaire", 'NA')}"""
+            <b>Précision de la localisation :</b> {row.get("Précision de la localisation", '')}"""
 
             folium.CircleMarker(
                 location=[row["Coordonnée 2"], row["Coordonnée 1"]],
