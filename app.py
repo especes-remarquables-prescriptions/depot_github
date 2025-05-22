@@ -175,7 +175,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
 
             st.markdown ("---")
             st.markdown(f"**Code unique clause :** {species_reference_info['Code_unique'].iloc[0]}")
-            st.markdown(f"**Condition d'application de la clause 🔶Uniquement dans les limites de la parcelle considérée🔶 :** {species_reference_info['Condition(s)_application_clause'].iloc[0]}")
+            st.markdown(f"**Condition d'application de la clause :** {species_reference_info['Condition(s)_application_clause'].iloc[0]}")
 
             with st.expander("📋 Libellés des clauses à inscrire"):
                 st.write(f"**Fiche chantier (TECK) :** {species_reference_info['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
@@ -357,13 +357,22 @@ if st.session_state.authenticated:
         df_reference = pd.read_excel('Metadonnees.xlsx')
         return df_reference
     
+    #Chargement de l'ensemble des espèces de france métropolitaine continentale pour la recherche intelligente par espèce.
+    @st.cache_data
+    def load_especes():
+        df_especes = pd.read_excel('TAXREF18.0_FR_Continental_28_04_2025.xlsx')
+        return df_especes
+
     # Exécution des fonctions de chargement
     df = load_data()
     codes_autorises = load_codes_autorises()
     df_reference = load_reference_especes()
+    df_especes = load_especes
+
 
     # Nettoyage des colonnes pour garantir l'uniformité des CD_NOM
     df_reference['CD_NOM'] = df_reference['CD_NOM'].astype(str).str.strip()
+    df_especes['CD_NOM'] = df_especes['CD_NOM'].astype(str).str.strip()
     df["Code taxon (cd_nom)"] = df["Code taxon (cd_nom)"].astype(str).str.split(',')
     df = df.explode("Code taxon (cd_nom)").copy() # Une ligne par taxon si plusieurs dans une même cellule
     df["Code taxon (cd_nom)"] = df["Code taxon (cd_nom)"].str.strip()
@@ -519,39 +528,53 @@ if st.session_state.authenticated:
         st.markdown("### 🔎 Recherche par espèce")
         st.markdown(
         "<div style='font-size:20px;'>"
-        "Entrez un code CD_NOM :"
+        "Entrez un nom d'espèce (vernaculaire ou scientifique) :"
         "</div>",
         unsafe_allow_html=True
         )
-        search_cd_nom = st.text_input(label=" ", label_visibility="collapsed")
-        
-        st.markdown("""
-        <div style='font-size:20px'>
-        Si vous connaissez uniquement le nom de l'espèce, tapez-le dans la barre de recherche du site de l'INPN pour obtenir le CD_NOM : <a href='https://inpn.mnhn.fr/accueil/index' target='_blank'>inpn.mnhn.fr</a>
-        </div>
-        """, unsafe_allow_html=True)
 
-        st.image("inpn_ex.png", use_container_width=True)
+        # Recherche avec auto-complétion
+        search_input = st.text_input("Recherchez une espèce (nom scientifique ou vernaculaire) :")
 
-        if search_cd_nom:
-            search_cd_nom = search_cd_nom.strip()
-            st.markdown("""
-                <style>
-                    div.stMarkdown p, div.stDataFrame, div.stSelectbox, div.stExpander, div[data-testid="stVerticalBlock"] {
-                        font-size: 20px !important;
-                    }
-                    div[data-testid="stMarkdownContainer"] {
-                        font-size: 20px !important;
-                    }
-                </style>
-            """, unsafe_allow_html=True)
-            match = df_reference[df_reference['CD_NOM'] == search_cd_nom]
+        if search_input:
+            search_input_lower = search_input.lower()
+            
+            # Filtrage intelligent sur plusieurs colonnes
+            filtered_df = df_especes[
+                df_especes['NOM_COMPLET'].str.lower().str.contains(search_input_lower) |
+                df_especes['NOM_VALIDE'].str.lower().str.contains(search_input_lower) |
+                df_especes['NOM_VERN'].str.lower().str.contains(search_input_lower) |
+                df_especes['NOM_VERN_ENG'].str.lower().str.contains(search_input_lower)
+            ]
+            
+            if filtered_df.empty:
+                st.warning("Aucune espèce trouvée.")
+            else:
+                # Création d'un label lisible pour chaque choix
+                options = filtered_df.apply(
+                    lambda row: f"{row['NOM_VERN']} ({row['NOM_VALIDE']}) - CD_NOM: {row['CD_NOM']}", axis=1
+                ).tolist()
+                
+                selected_label = st.selectbox("Espèces correspondantes :", options)
+                
+                # Récupérer l'espèce sélectionnée
+                selected_index = options.index(selected_label)
+                selected_species = filtered_df.iloc[selected_index]
+                selected_cd_nom = selected_species['CD_NOM']
+                
+                st.markdown(f"### Espèce sélectionnée : *{selected_species['NOM_VALIDE']}*")
+                st.markdown(f"**Nom vernaculaire :** {selected_species['NOM_VERN']}")
+                
+                # Vérifier si elle est remarquable
+                match = df_metadonnees[df_metadonnees['CD_NOM'] == selected_cd_nom]
+                
+                if not match.empty:
+                    st.success("✅ Cette espèce est bien **remarquable pour l'ONF Normandie**.")
 
-            st.subheader(f"📘 Statuts et prescriptions : {search_cd_nom}")
+                    st.subheader(f"📘 Statuts et prescriptions : {selected_cd_nom}")
 
-            if not match.empty and str(match['Rôle_TFT'].iloc[0]).strip().upper() != "N.C.":
-                with st.container():
-                    st.markdown(f"**Nom scientifique :** {match['Nom_scientifique_valide_html'].iloc[0]}")
+                    with st.container():
+                    st.markdown(f"**Nom scientifique :** {match['Nom_scientifique_valide'].iloc[0]}")
                     st.markdown(f"**Nom vernaculaire :** {match['Nom_vernaculaire'].iloc[0]}")
                     st.markdown(f"**Catégorie naturaliste :** {match['Cat_naturaliste'].iloc[0]}")
                     
@@ -575,7 +598,7 @@ if st.session_state.authenticated:
 
                     st.markdown ("---")
                     st.markdown(f"**Code unique clause :** {match['Code_unique'].iloc[0]}")
-                    st.markdown(f"**Condition d'application de la clause 🔶Uniquement dans les limites de la parcelle considérée🔶:** {match['Condition(s)_application_clause'].iloc[0]}")
+                    st.markdown(f"**Condition d'application de la clause :** {match['Condition(s)_application_clause'].iloc[0]}")
                     
                     with st.expander("📋 Libellés des clauses à inscrire"):
                         st.write(f"**Libellé Fiche chantier (TECK) :** {match['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
@@ -640,5 +663,7 @@ if st.session_state.authenticated:
                         else:
                             st.write("**Arrêté de protection :** Non Concerné")
                         st.write(f"**Article de l'arrêté :** {traduire_statut(match['Article_arrêté'].iloc[0])}")
-            else:
-                st.info("❌ Il n'existe pas de prescription environnementale pour cette espèce.")
+
+                else:
+                    st.warning("🚫 Cette espèce **n'est pas remarquable pour l'ONF Normandie**.")
+                    st.markdown(f"[🔗 Voir la fiche INPN de l'espèce]({selected_species['URL']})")
