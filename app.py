@@ -371,272 +371,272 @@ if st.session_state.authenticated:
     forets = df['Forêt'].dropna().unique() # Liste des forêts sans doublons ni NaN
 
 
-# --------------------- PAGE ACCUEIL ---------------------
+    # --------------------- PAGE ACCUEIL ---------------------
 
-if page == "Accueil":
-    st.title("🦋 Espèces remarquables et prescriptions") # Affichage d’un titre en haut de la page d'accueil
-    
-    # Texte de présentation
-    st.markdown("""
-    <div style='font-size:22px'>
-        <br><br>        
-        Bienvenue dans l'outil de consultation des données d'espèces remarquables par forêt avec les prescriptions environnementales associées.
-        <br><br>
-        Une espèce est considérée remarquable si elle possède au moins un des statuts suivants :
-        <ul>
-            <li>Espèce protégée par arrêté national ou régional ;</li>
-            <li>Espèce réglementée au niveau européen par les directives Oiseaux (Annexe I) ou Habitats, Faune, Flore (Annexe II & IV) ;</li>
-            <li>Espèce menacée sur la liste rouge régionale normande ou sur la liste rouge nationale (Statut "Vulnérable = VU", "En danger = EN" ou "En danger critique = CR") ;</li>
-            <li>Espèce faisant l'objet d'un plan national d'action en faveur des espèces menacées ;</li>
-            <li>Espèce faisant l'objet d'une clause environnementale de l'ONF (9200-15-GUI-SAM-052).</li>
-        </ul>
-        <br>
-        Les espèces ont été hiérarchisées selon deux indices, un indice de priorité de conservation et un indice de priorité réglementaire. 
-        <br><br>
-    </div>
-    """, unsafe_allow_html=True)
+    if page == "Accueil":
+        st.title("🦋 Espèces remarquables et prescriptions") # Affichage d’un titre en haut de la page d'accueil
+        
+        # Texte de présentation
+        st.markdown("""
+        <div style='font-size:22px'>
+            <br><br>        
+            Bienvenue dans l'outil de consultation des données d'espèces remarquables par forêt avec les prescriptions environnementales associées.
+            <br><br>
+            Une espèce est considérée remarquable si elle possède au moins un des statuts suivants :
+            <ul>
+                <li>Espèce protégée par arrêté national ou régional ;</li>
+                <li>Espèce réglementée au niveau européen par les directives Oiseaux (Annexe I) ou Habitats, Faune, Flore (Annexe II & IV) ;</li>
+                <li>Espèce menacée sur la liste rouge régionale normande ou sur la liste rouge nationale (Statut "Vulnérable = VU", "En danger = EN" ou "En danger critique = CR") ;</li>
+                <li>Espèce faisant l'objet d'un plan national d'action en faveur des espèces menacées ;</li>
+                <li>Espèce faisant l'objet d'une clause environnementale de l'ONF (9200-15-GUI-SAM-052).</li>
+            </ul>
+            <br>
+            Les espèces ont été hiérarchisées selon deux indices, un indice de priorité de conservation et un indice de priorité réglementaire. 
+            <br><br>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <div style="
-        background-color: rgba(255, 0, 0, 0.1);
-        padding: 1.5rem;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 0, 0, 0.3);
-        font-size: 22px;
-        line-height: 1.6;
-        ">
-        <i>L'indice de <b>priorité de conservation</b> intègre la menace d'extinction au niveau régional et national, ainsi que la responsabilité de la Normandie dans la conservation de l'espèce. La méthode utilisée pour calculer cet indice se base sur les travaux de Barneix et Gigot (2013) et sur les initiatives de hiérarchisation qui ont découlé de ces travaux à l'échelle des régions françaises.</i>
-        <br><br>
-        <i>L'indice de <b>priorité réglementaire</b> intègre les différents types de réglementation (Directives européennes, protection par arreté) et les subtilités d'interprétation des articles d'arrêtés. En effet, certains articles protègent uniquement les spécimens et d'autres articles protègent, en plus des spécimens, les éléments nécessaires au bon fonctionnement du cycle biologique de l'espèce, incluant notamment les sites de reproduction et de repos. Enfin, cet indice prend en compte le risque que l'ONF entrave ces réglementations. En effet, pour certaines espèces très communes comme la mésange bleue, le risque réglementaire est très faible étant donné que la conservation de l'espèce à l'échelle du massif est assurée par la gestion classique de l'ONF.</i>
-    </div>
-    """, unsafe_allow_html=True)
+        st.markdown("""
+        <div style="
+            background-color: rgba(255, 0, 0, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            font-size: 22px;
+            line-height: 1.6;
+            ">
+            <i>L'indice de <b>priorité de conservation</b> intègre la menace d'extinction au niveau régional et national, ainsi que la responsabilité de la Normandie dans la conservation de l'espèce. La méthode utilisée pour calculer cet indice se base sur les travaux de Barneix et Gigot (2013) et sur les initiatives de hiérarchisation qui ont découlé de ces travaux à l'échelle des régions françaises.</i>
+            <br><br>
+            <i>L'indice de <b>priorité réglementaire</b> intègre les différents types de réglementation (Directives européennes, protection par arreté) et les subtilités d'interprétation des articles d'arrêtés. En effet, certains articles protègent uniquement les spécimens et d'autres articles protègent, en plus des spécimens, les éléments nécessaires au bon fonctionnement du cycle biologique de l'espèce, incluant notamment les sites de reproduction et de repos. Enfin, cet indice prend en compte le risque que l'ONF entrave ces réglementations. En effet, pour certaines espèces très communes comme la mésange bleue, le risque réglementaire est très faible étant donné que la conservation de l'espèce à l'échelle du massif est assurée par la gestion classique de l'ONF.</i>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <div style='font-size:22px'>
-        <br>
-        Ces deux indices permettront de hiérarchiser les enjeux et de prioriser les clauses environnementales.
-        <br><br>
-        ⬅️ Utilisez le menu à gauche pour consulter les espèces remarquables présentes en forêt et accéder aux statuts et prescriptions.
-    </div>
-    """, unsafe_allow_html=True)
-    
-# --------------------- PAGE FORÊT ---------------------
+        st.markdown("""
+        <div style='font-size:22px'>
+            <br>
+            Ces deux indices permettront de hiérarchiser les enjeux et de prioriser les clauses environnementales.
+            <br><br>
+            ⬅️ Utilisez le menu à gauche pour consulter les espèces remarquables présentes en forêt et accéder aux statuts et prescriptions.
+        </div>
+        """, unsafe_allow_html=True)
+        
+    # --------------------- PAGE FORÊT ---------------------
 
 
-if page == "Recherche par forêt":
-    st.markdown("### 🔎 Recherche par forêt")
-    if 'selected_foret' not in st.session_state:
-        st.session_state.selected_foret = None
-    if 'selected_parcelle' not in st.session_state:
-        st.session_state.selected_parcelle = None
-    if "view" not in st.session_state:
-        st.session_state.view = 'start'
-    if st.session_state.get("first_load", True):
-        st.session_state.first_load = False
-        st.rerun()
-
-    # Sélection de la forêt
-    if st.session_state.selected_foret is None:
-        selected_foret = st.selectbox("Sélectionnez une forêt🌲:", [""] + sorted(forets))
-        if selected_foret:
-            st.session_state.selected_foret = selected_foret
-            st.session_state.view = "forest_view"
+    if page == "Recherche par forêt":
+        st.markdown("### 🔎 Recherche par forêt")
+        if 'selected_foret' not in st.session_state:
+            st.session_state.selected_foret = None
+        if 'selected_parcelle' not in st.session_state:
+            st.session_state.selected_parcelle = None
+        if "view" not in st.session_state:
+            st.session_state.view = 'start'
+        if st.session_state.get("first_load", True):
+            st.session_state.first_load = False
             st.rerun()
 
-    # Vue forêt sélectionnée
-    elif st.session_state.view == "forest_view":
-        foret = st.session_state.selected_foret
-        df_foret = df[df['Forêt'] == foret]
-        
-        with st.container ():
-            if st.button("📌 Filtrer par parcelle"):
-                st.session_state.view = "parcelle_view"
+        # Sélection de la forêt
+        if st.session_state.selected_foret is None:
+            selected_foret = st.selectbox("Sélectionnez une forêt🌲:", [""] + sorted(forets))
+            if selected_foret:
+                st.session_state.selected_foret = selected_foret
+                st.session_state.view = "forest_view"
                 st.rerun()
-            if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la forêt"):
-                st.session_state.view = "species_forest"
-                st.rerun()
-            st.button("⬅️ Retour à la liste des forêts", on_click=lambda: st.session_state.update({"view": "start","selected_foret": None}))
 
-        afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
-
-    # Vue filtre par parcelle
-    elif st.session_state.view == "parcelle_view":
-        foret = st.session_state.selected_foret
-        df_foret = df[df['Forêt'] == foret]
-        parcelles_dispo = sorted(df_foret["Parcelle de forêt"].unique())
-
-        # Définir la parcelle par défaut (si connue) OU forcer à "" sinon
-        if st.session_state.selected_parcelle in parcelles_dispo:
-            default_index = parcelles_dispo.index(st.session_state.selected_parcelle)
-            selected_parcelle = st.selectbox("📌 Choisissez une parcelle :", parcelles_dispo, index=default_index)
-        else:
-            selected_parcelle = st.selectbox("📌 Choisissez une parcelle :", [""] + parcelles_dispo)
+        # Vue forêt sélectionnée
+        elif st.session_state.view == "forest_view":
+            foret = st.session_state.selected_foret
+            df_foret = df[df['Forêt'] == foret]
             
-        if selected_parcelle:
-            st.session_state.selected_parcelle = selected_parcelle
-            df_parcelle = df_foret[df_foret["Parcelle de forêt"] == selected_parcelle]
+            with st.container ():
+                if st.button("📌 Filtrer par parcelle"):
+                    st.session_state.view = "parcelle_view"
+                    st.rerun()
+                if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la forêt"):
+                    st.session_state.view = "species_forest"
+                    st.rerun()
+                st.button("⬅️ Retour à la liste des forêts", on_click=lambda: st.session_state.update({"view": "start","selected_foret": None}))
 
-            if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la parcelle"):
-                st.session_state.view = "species_parcelle"
-                st.rerun()
+            afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
 
-            if st.button("⬅️ Retour à la carte de la forêt"):
-                st.session_state.update({"view": "forest_view", "selected_parcelle": None})
+        # Vue filtre par parcelle
+        elif st.session_state.view == "parcelle_view":
+            foret = st.session_state.selected_foret
+            df_foret = df[df['Forêt'] == foret]
+            parcelles_dispo = sorted(df_foret["Parcelle de forêt"].unique())
 
-            afficher_carte(df_parcelle, titre=f"📍 Espèces remarquables dans la parcelle {selected_parcelle}")
-        
-    # Statuts et prescriptions forêt
-    elif st.session_state.view == "species_forest":
-        st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view"}))
+            # Définir la parcelle par défaut (si connue) OU forcer à "" sinon
+            if st.session_state.selected_parcelle in parcelles_dispo:
+                default_index = parcelles_dispo.index(st.session_state.selected_parcelle)
+                selected_parcelle = st.selectbox("📌 Choisissez une parcelle :", parcelles_dispo, index=default_index)
+            else:
+                selected_parcelle = st.selectbox("📌 Choisissez une parcelle :", [""] + parcelles_dispo)
+                
+            if selected_parcelle:
+                st.session_state.selected_parcelle = selected_parcelle
+                df_parcelle = df_foret[df_foret["Parcelle de forêt"] == selected_parcelle]
 
-        st.markdown (f" ### Détails des espèces remarquables pour la forêt : {st.session_state.selected_foret}")
-        df_filtré = df[df['Forêt'] == st.session_state.selected_foret]
-        afficher_statuts_prescriptions(df_filtré, df_reference)
+                if st.button("📘 Voir les statuts et prescriptions des espèces remarquables de la parcelle"):
+                    st.session_state.view = "species_parcelle"
+                    st.rerun()
 
-    # Statuts et prescriptions parcelle
-    elif st.session_state.view == "species_parcelle":
-        st.button("⬅️ Retour à la carte de la parcelle", on_click=lambda: st.session_state.update({"view": "parcelle_view", "selected_parcelle":st.session_state.selected_parcelle}))
-        
-        st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view"}))
-        
-        st.markdown (f" ### Détails des espèces remarquables pour la parcelle : {st.session_state.selected_parcelle}")
-        df_filtré = df[
-            (df['Forêt'] == st.session_state.selected_foret) &
-            (df['Parcelle de forêt'] == st.session_state.selected_parcelle)
-        ]
-        afficher_statuts_prescriptions(df_filtré, df_reference)
+                if st.button("⬅️ Retour à la carte de la forêt"):
+                    st.session_state.update({"view": "forest_view", "selected_parcelle": None})
 
-if st.session_state.get("reset_requested"):
-    st.session_state.reset_requested = False
-    st.rerun()
+                afficher_carte(df_parcelle, titre=f"📍 Espèces remarquables dans la parcelle {selected_parcelle}")
+            
+        # Statuts et prescriptions forêt
+        elif st.session_state.view == "species_forest":
+            st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view"}))
+
+            st.markdown (f" ### Détails des espèces remarquables pour la forêt : {st.session_state.selected_foret}")
+            df_filtré = df[df['Forêt'] == st.session_state.selected_foret]
+            afficher_statuts_prescriptions(df_filtré, df_reference)
+
+        # Statuts et prescriptions parcelle
+        elif st.session_state.view == "species_parcelle":
+            st.button("⬅️ Retour à la carte de la parcelle", on_click=lambda: st.session_state.update({"view": "parcelle_view", "selected_parcelle":st.session_state.selected_parcelle}))
+            
+            st.button("⬅️ Retour à la carte de la forêt", on_click=lambda: st.session_state.update({"view": "forest_view"}))
+            
+            st.markdown (f" ### Détails des espèces remarquables pour la parcelle : {st.session_state.selected_parcelle}")
+            df_filtré = df[
+                (df['Forêt'] == st.session_state.selected_foret) &
+                (df['Parcelle de forêt'] == st.session_state.selected_parcelle)
+            ]
+            afficher_statuts_prescriptions(df_filtré, df_reference)
+
+    if st.session_state.get("reset_requested"):
+        st.session_state.reset_requested = False
+        st.rerun()
 
 
-# --------------------- PAGE ESPECES ---------------------
+    # --------------------- PAGE ESPECES ---------------------
 
-elif page == "Recherche par espèce" :
-    st.markdown("### 🔎 Recherche par espèce")
-    st.markdown(
-    "<div style='font-size:20px;'>"
-    "Entrez un code CD_NOM :"
-    "</div>",
-    unsafe_allow_html=True
-    )
-    search_cd_nom = st.text_input(label=" ", label_visibility="collapsed")
+    elif page == "Recherche par espèce" :
+        st.markdown("### 🔎 Recherche par espèce")
+        st.markdown(
+        "<div style='font-size:20px;'>"
+        "Entrez un code CD_NOM :"
+        "</div>",
+        unsafe_allow_html=True
+        )
+        search_cd_nom = st.text_input(label=" ", label_visibility="collapsed")
 
-    st.markdown("""
-    <div style='font-size:20px'>
-    Si vous connaissez uniquement le nom de l'espèce, tapez-le dans la barre de recherche du site de l'INPN pour obtenir le CD_NOM : <a href='https://inpn.mnhn.fr/accueil/index' target='_blank'>inpn.mnhn.fr</a>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.image("inpn_ex.png", use_container_width=True)
-
-    if search_cd_nom:
-        search_cd_nom = search_cd_nom.strip()
         st.markdown("""
-            <style>
-                div.stMarkdown p, div.stDataFrame, div.stSelectbox, div.stExpander, div[data-testid="stVerticalBlock"] {
-                    font-size: 20px !important;
-                }
-                div[data-testid="stMarkdownContainer"] {
-                    font-size: 20px !important;
-                }
-            </style>
+        <div style='font-size:20px'>
+        Si vous connaissez uniquement le nom de l'espèce, tapez-le dans la barre de recherche du site de l'INPN pour obtenir le CD_NOM : <a href='https://inpn.mnhn.fr/accueil/index' target='_blank'>inpn.mnhn.fr</a>
+        </div>
         """, unsafe_allow_html=True)
-        match = df_reference[df_reference['CD_NOM'] == search_cd_nom]
 
-        st.subheader(f"📘 Statuts et prescriptions : {search_cd_nom}")
+        st.image("inpn_ex.png", use_container_width=True)
 
-        if not match.empty and str(match['Rôle_TFT'].iloc[0]).strip().upper() != "N.C.":
-            with st.container():
-                st.markdown(f"**Nom scientifique :** {match['Nom_scientifique_valide'].iloc[0]}")
-                st.markdown(f"**Nom vernaculaire :** {match['Nom_vernaculaire'].iloc[0]}")
-                st.markdown(f"**Catégorie naturaliste :** {match['Cat_naturaliste'].iloc[0]}")
-                
-                conserv_index = match['Indice_priorité_conservation'].iloc[0]
-                color = get_conservation_color(conserv_index)
-
-                st.markdown(f"""
-                    <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                    <b>Priorité de conservation ℹ️ :</b> {conserv_index}
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                reg_index = match['Indice_priorité_réglementaire'].iloc[0]
-                color_reg = get_reglementaire_color(reg_index)
-
-                st.markdown(f"""
-                    <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                    <b>Priorité réglementaire ℹ️ :</b> {reg_index}
-                    </div>
-                    """, unsafe_allow_html=True)
-
-                st.markdown ("---")
-                st.markdown(f"**Code unique clause :** {match['Code_unique'].iloc[0]}")
-                st.markdown(f"**Condition d'application de la clause :** {match['Condition(s)_application_clause'].iloc[0]}")
-                
-                with st.expander("📋 Libellés des clauses à inscrire"):
-                    st.write(f"**Libellé Fiche chantier (TECK) :** {match['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
-                    st.write(f"**Libellé Fiche désignation (DESIGNATION MOBILE) :** {match['Libellé_fiche_désignation_ONF (DESIGNATION MOBILE)'].iloc[0]}")
-                    st.write(f"**Libellé Fiche vente (PRODUCTION BOIS) :** {match['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
-
-                st.markdown(f"**Rôle du TFT :** {match['Rôle_TFT'].iloc[0]}")
-
-
-                st.markdown ("---")
-                with st.expander("ℹ️ Légende des indices de priorité"):
-                    st.markdown("""
-                    **Indice de priorité de conservation** :
-                    - `5` : Priorité de conservation majeure
-                    - `4` : Priorité de conservation très élevée 
-                    - `3` : Priorité de conservation élevée
-                    - `2` : Priorité de conservation modérée
-                    - `1` : Priorité de conservation faible
-
-                    **Indice de priorité réglementaire** :
-                    - `4` : Risque réglementaire majeur (Espèce réglementée au niveau européen + national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                    - `3` : Risque réglementaire élevé (Espèce réglementée au niveau national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                    - `2` : Risque réglementaire uniquement si les interventions forestières impactent les spécimens.
-                    - `1` : La gestion forestière courante de l'ONF suffit à respecter la réglementation associée à l'espèce, que ce soit sur les spécimens ou sur les éléments nécessaires au bon fonctionnement de leur cycle biologique.
-                    - `0` : Espèce non protégée.
-                    """)
-
-                # Dictionnaire de correspondance
-                respo_dict = {
-                        1: "Faible",
-                        2: "Modérée",
-                        3: "Significative",
-                        4: "Forte",
-                        5: "Majeure"
+        if search_cd_nom:
+            search_cd_nom = search_cd_nom.strip()
+            st.markdown("""
+                <style>
+                    div.stMarkdown p, div.stDataFrame, div.stSelectbox, div.stExpander, div[data-testid="stVerticalBlock"] {
+                        font-size: 20px !important;
                     }
+                    div[data-testid="stMarkdownContainer"] {
+                        font-size: 20px !important;
+                    }
+                </style>
+            """, unsafe_allow_html=True)
+            match = df_reference[df_reference['CD_NOM'] == search_cd_nom]
 
-                # Récupérer la valeur brute dans le tableau
-                valeur_respo = match['Respo_reg'].iloc[0]
+            st.subheader(f"📘 Statuts et prescriptions : {search_cd_nom}")
 
-                # Traduire en texte si possible
-                texte_respo = respo_dict.get(valeur_respo, "Non Renseigné")
-
-                with st.expander("🟢Détail des statuts"):
-                    st.write(f"**Liste rouge régionale :** {traduire_statut(match['LR_reg'].iloc[0])}")
-                    st.write(f"**Liste rouge nationale :** {traduire_statut(match['LR_nat'].iloc[0])}")
-                    st.write(f"**Responsabilité régionale :** {texte_respo}")
-                    st.write(f"**Directives européennes :** {traduire_statut(match['Directives_euro'].iloc[0])}")
-                    st.write(f"**Plan d'action :** {traduire_statut(match['Plan_action'].iloc[0])}")
+            if not match.empty and str(match['Rôle_TFT'].iloc[0]).strip().upper() != "N.C.":
+                with st.container():
+                    st.markdown(f"**Nom scientifique :** {match['Nom_scientifique_valide'].iloc[0]}")
+                    st.markdown(f"**Nom vernaculaire :** {match['Nom_vernaculaire'].iloc[0]}")
+                    st.markdown(f"**Catégorie naturaliste :** {match['Cat_naturaliste'].iloc[0]}")
                     
-                    # Récupération des 3 colonnes concernées
-                    apn = match['Arrêté_protection_nationale'].iloc[0]
-                    ap_bn = match['Arrêté_protection_BN'].iloc[0]
-                    ap_hn = match['Arrêté_protection_HN'].iloc[0]
+                    conserv_index = match['Indice_priorité_conservation'].iloc[0]
+                    color = get_conservation_color(conserv_index)
 
-                    # On filtre uniquement les valeurs différentes de "N.C."
-                    valeurs_protection = [apn, ap_bn, ap_hn]
-                    valeurs_non_nc = [v for v in valeurs_protection if str(v).strip() != "N.C."]
+                    st.markdown(f"""
+                        <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
+                        <b>Priorité de conservation ℹ️ :</b> {conserv_index}
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    reg_index = match['Indice_priorité_réglementaire'].iloc[0]
+                    color_reg = get_reglementaire_color(reg_index)
 
-                    # Affichage
-                    if valeurs_non_nc:
-                        st.write(f"**Arrêté de protection :** {', '.join(valeurs_non_nc)}")
-                    else:
-                        st.write("**Arrêté de protection :** Non Concerné")
-                    st.write(f"**Article de l'arrêté :** {traduire_statut(match['Article_arrêté'].iloc[0])}")
-        else:
-            st.info("❌ Il n'existe pas de prescription environnementale pour cette espèce.")
+                    st.markdown(f"""
+                        <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
+                        <b>Priorité réglementaire ℹ️ :</b> {reg_index}
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                    st.markdown ("---")
+                    st.markdown(f"**Code unique clause :** {match['Code_unique'].iloc[0]}")
+                    st.markdown(f"**Condition d'application de la clause :** {match['Condition(s)_application_clause'].iloc[0]}")
+                    
+                    with st.expander("📋 Libellés des clauses à inscrire"):
+                        st.write(f"**Libellé Fiche chantier (TECK) :** {match['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
+                        st.write(f"**Libellé Fiche désignation (DESIGNATION MOBILE) :** {match['Libellé_fiche_désignation_ONF (DESIGNATION MOBILE)'].iloc[0]}")
+                        st.write(f"**Libellé Fiche vente (PRODUCTION BOIS) :** {match['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
+
+                    st.markdown(f"**Rôle du TFT :** {match['Rôle_TFT'].iloc[0]}")
+
+
+                    st.markdown ("---")
+                    with st.expander("ℹ️ Légende des indices de priorité"):
+                        st.markdown("""
+                        **Indice de priorité de conservation** :
+                        - `5` : Priorité de conservation majeure
+                        - `4` : Priorité de conservation très élevée 
+                        - `3` : Priorité de conservation élevée
+                        - `2` : Priorité de conservation modérée
+                        - `1` : Priorité de conservation faible
+
+                        **Indice de priorité réglementaire** :
+                        - `4` : Risque réglementaire majeur (Espèce réglementée au niveau européen + national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
+                        - `3` : Risque réglementaire élevé (Espèce réglementée au niveau national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
+                        - `2` : Risque réglementaire uniquement si les interventions forestières impactent les spécimens.
+                        - `1` : La gestion forestière courante de l'ONF suffit à respecter la réglementation associée à l'espèce, que ce soit sur les spécimens ou sur les éléments nécessaires au bon fonctionnement de leur cycle biologique.
+                        - `0` : Espèce non protégée.
+                        """)
+
+                    # Dictionnaire de correspondance
+                    respo_dict = {
+                            1: "Faible",
+                            2: "Modérée",
+                            3: "Significative",
+                            4: "Forte",
+                            5: "Majeure"
+                        }
+
+                    # Récupérer la valeur brute dans le tableau
+                    valeur_respo = match['Respo_reg'].iloc[0]
+
+                    # Traduire en texte si possible
+                    texte_respo = respo_dict.get(valeur_respo, "Non Renseigné")
+
+                    with st.expander("🟢Détail des statuts"):
+                        st.write(f"**Liste rouge régionale :** {traduire_statut(match['LR_reg'].iloc[0])}")
+                        st.write(f"**Liste rouge nationale :** {traduire_statut(match['LR_nat'].iloc[0])}")
+                        st.write(f"**Responsabilité régionale :** {texte_respo}")
+                        st.write(f"**Directives européennes :** {traduire_statut(match['Directives_euro'].iloc[0])}")
+                        st.write(f"**Plan d'action :** {traduire_statut(match['Plan_action'].iloc[0])}")
+                        
+                        # Récupération des 3 colonnes concernées
+                        apn = match['Arrêté_protection_nationale'].iloc[0]
+                        ap_bn = match['Arrêté_protection_BN'].iloc[0]
+                        ap_hn = match['Arrêté_protection_HN'].iloc[0]
+
+                        # On filtre uniquement les valeurs différentes de "N.C."
+                        valeurs_protection = [apn, ap_bn, ap_hn]
+                        valeurs_non_nc = [v for v in valeurs_protection if str(v).strip() != "N.C."]
+
+                        # Affichage
+                        if valeurs_non_nc:
+                            st.write(f"**Arrêté de protection :** {', '.join(valeurs_non_nc)}")
+                        else:
+                            st.write("**Arrêté de protection :** Non Concerné")
+                        st.write(f"**Article de l'arrêté :** {traduire_statut(match['Article_arrêté'].iloc[0])}")
+            else:
+                st.info("❌ Il n'existe pas de prescription environnementale pour cette espèce.")
