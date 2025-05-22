@@ -158,11 +158,11 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
 
             folium.CircleMarker(
                 location=[row["Coordonnée 2"], row["Coordonnée 1"]],
-                radius=7,
+                radius=3,
                 color=couleur,
                 fill=True,
                 fill_color=couleur,
-                fill_opacity=0.9,
+                fill_opacity=1,
                 popup=folium.Popup(popup, max_width=500)
             ).add_to(m)
 
