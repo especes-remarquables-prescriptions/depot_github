@@ -367,7 +367,7 @@ if st.session_state.authenticated:
     df = load_data()
     codes_autorises = load_codes_autorises()
     df_reference = load_reference_especes()
-    df_especes = load_especes
+    df_especes = load_especes()
 
 
     # Nettoyage des colonnes pour garantir l'uniformité des CD_NOM
