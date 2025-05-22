@@ -574,31 +574,31 @@ if st.session_state.authenticated:
                     st.subheader(f"📘 Statuts et prescriptions : {selected_cd_nom}")
 
                     with st.container():
-                    st.markdown(f"**Nom scientifique :** {match['Nom_scientifique_valide'].iloc[0]}")
-                    st.markdown(f"**Nom vernaculaire :** {match['Nom_vernaculaire'].iloc[0]}")
-                    st.markdown(f"**Catégorie naturaliste :** {match['Cat_naturaliste'].iloc[0]}")
-                    
-                    conserv_index = match['Indice_priorité_conservation'].iloc[0]
-                    color = get_conservation_color(conserv_index)
+                        st.markdown(f"**Nom scientifique :** {match['Nom_scientifique_valide'].iloc[0]}")
+                        st.markdown(f"**Nom vernaculaire :** {match['Nom_vernaculaire'].iloc[0]}")
+                        st.markdown(f"**Catégorie naturaliste :** {match['Cat_naturaliste'].iloc[0]}")
+                        
+                        conserv_index = match['Indice_priorité_conservation'].iloc[0]
+                        color = get_conservation_color(conserv_index)
 
-                    st.markdown(f"""
-                        <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité de conservation ℹ️ :</b> {conserv_index}
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    reg_index = match['Indice_priorité_réglementaire'].iloc[0]
-                    color_reg = get_reglementaire_color(reg_index)
+                        st.markdown(f"""
+                            <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
+                            <b>Priorité de conservation ℹ️ :</b> {conserv_index}
+                            </div>
+                            """, unsafe_allow_html=True)
+                        
+                        reg_index = match['Indice_priorité_réglementaire'].iloc[0]
+                        color_reg = get_reglementaire_color(reg_index)
 
-                    st.markdown(f"""
-                        <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité réglementaire ℹ️ :</b> {reg_index}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        st.markdown(f"""
+                            <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
+                            <b>Priorité réglementaire ℹ️ :</b> {reg_index}
+                            </div>
+                            """, unsafe_allow_html=True)
 
-                    st.markdown ("---")
-                    st.markdown(f"**Code unique clause :** {match['Code_unique'].iloc[0]}")
-                    st.markdown(f"**Condition d'application de la clause :** {match['Condition(s)_application_clause'].iloc[0]}")
+                        st.markdown ("---")
+                        st.markdown(f"**Code unique clause :** {match['Code_unique'].iloc[0]}")
+                        st.markdown(f"**Condition d'application de la clause :** {match['Condition(s)_application_clause'].iloc[0]}")
                     
                     with st.expander("📋 Libellés des clauses à inscrire"):
                         st.write(f"**Libellé Fiche chantier (TECK) :** {match['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
