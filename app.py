@@ -65,12 +65,49 @@ def reset_all():
     st.session_state.view = "start"
     st.session_state.reset_requested = True
 
+# Dictionnaire des couleurs de popup de la carte par niveau de priorité conservation
+couleurs = {
+    1: "#00B050",   # vert foncé
+    2: "#92D050",   # vert clair
+    3: "#FFFF00",   # jaune
+    4: "#FF9900",   # orange
+    5: "#FF0000",   # rouge
+    "default": "#D3D3D3"  # gris clair
+}
+
+# Détermination de la couleur du popup de la carte d'après les indices
+def get_couleur_personnalisee(row):
+    c = row["Indice_priorité_conservation"]
+    r = row["Indice_priorité_réglementaire"]
+
+    try:
+        if c == 5 or r == 4:
+            return couleurs[5]
+        elif c == 4 or r == 3:
+            return couleurs[4]
+        elif c == 3 or r == 2:
+            return couleurs[3]
+        elif c == 2 and r <= 1:
+            return couleurs[2]
+        elif c == 1 and r <= 1:
+            return couleurs[1]
+        else:
+            return couleurs["default"]
+    except:
+        return couleurs["default"]
+
 
 # Fonction d'affichage des cartes
-def afficher_carte(df, titre="📍 Localisation des espèces"):
+def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     if df.empty:
         st.warning("Aucune donnée à afficher pour cette sélection.")
         return
+
+    # Fusion avec la table de référence via CD_NOM
+    df = df.merge(
+        df_reference[["CD_NOM", "Espèce", "Indice_priorité_conservation", "Indice_priorité_réglementaire"]],
+        on="CD_NOM", how="left"
+    )
 
     # Astuce CSS pour limiter la hauteur au chargement
     st.markdown("""
@@ -104,20 +141,28 @@ def afficher_carte(df, titre="📍 Localisation des espèces"):
     # Ajout des points naturalistes
     for _, row in df.iterrows():
         if pd.notna(row["Coordonnée 1"]) and pd.notna(row["Coordonnée 2"]):
-            popup = f"""<b>Parcelle :</b> {row['Parcelle de forêt']}<br>
-            <b>Espèce :</b> {row['Espèce']}<br>
-            <b>Commentaire de la localisation :</b> {row['Commentaire de la localisation']}<br>
-            <b>Commentaire de l'observation :</b> {row["Commentaire de l'observation"]}<br>
-            <b>Date d'observation :</b> {row["Date de début"]}<br>
+            couleur = get_couleur_personnalisee(row)
+
+            popup = f"""<b>Parcelle :</b> {row.get('Parcelle de forêt', '')}<br>
+            <b>Espèce :</b> {row.get('Espèce', 'Non renseignée')}<br>
+            <b>Commentaire de la localisation :</b> {row.get('Commentaire de la localisation', '')}<br>
+            <b>Commentaire de l'observation :</b> {row.get("Commentaire de l'observation", '')}<br>
+            <b>Date d'observation :</b> {row.get("Date de début", '')}<br>
             <b>Coordonnée 1 :</b> {row["Coordonnée 1"]}<br>
             <b>Coordonnée 2 :</b> {row["Coordonnée 2"]}<br>
-            <b>Système de coordonnées :</b> {row["Système de coordonnées"]}<br>
-            <b>Précision de la localisation :</b> {row["Précision de la localisation"]}"""
+            <b>Système de coordonnées :</b> {row.get("Système de coordonnées", '')}<br>
+            <b>Précision de la localisation :</b> {row.get("Précision de la localisation", '')}<br>
+            <b>Indice conservation :</b> {row.get("Indice_priorité_conservation", 'NA')}<br>
+            <b>Indice réglementaire :</b> {row.get("Indice_priorité_réglementaire", 'NA')}"""
 
-            folium.Marker(
+            folium.CircleMarker(
                 location=[row["Coordonnée 2"], row["Coordonnée 1"]],
-                popup=folium.Popup(popup, max_width=500),
-                icon=folium.Icon(color="orange", icon="leaf", prefix="fa")
+                radius=7,
+                color=couleur,
+                fill=True,
+                fill_color=couleur,
+                fill_opacity=0.9,
+                popup=folium.Popup(popup, max_width=500)
             ).add_to(m)
 
     # Contrôle de couches
@@ -269,7 +314,7 @@ st.markdown("""
 # HTML pour le bandeau
 st.markdown("""
     <div class="header-banner">
-        ---------------OUTIL EN COURS DE DEVELOPPEMENT-----------------SEAP ONF NORMANDIE----------------
+        <i>OUTIL EN COURS DE DEVELOPPEMENT --  --  --  SEAP ONF NORMANDIE</i>
     </div>
 """, unsafe_allow_html=True)
 
@@ -457,7 +502,7 @@ if st.session_state.authenticated:
                     st.rerun()
                 st.button("⬅️ Retour à la liste des forêts", on_click=lambda: st.session_state.update({"view": "start","selected_foret": None}))
 
-            afficher_carte(df_foret, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
+            afficher_carte(df_foret, df_reference, titre=f"📍 Carte des espèces remarquables de la forêt {foret}")
 
         # Vue filtre par parcelle
         elif st.session_state.view == "parcelle_view":
@@ -483,7 +528,7 @@ if st.session_state.authenticated:
                 if st.button("⬅️ Retour à la carte de la forêt"):
                     st.session_state.update({"view": "forest_view", "selected_parcelle": None})
 
-                afficher_carte(df_parcelle, titre=f"📍 Espèces remarquables dans la parcelle {selected_parcelle}")
+                afficher_carte(df_parcelle, df_reference, titre=f"📍 Espèces remarquables dans la parcelle {selected_parcelle}")
             
         # Statuts et prescriptions forêt
         elif st.session_state.view == "species_forest":
