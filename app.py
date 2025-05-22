@@ -528,12 +528,6 @@ if st.session_state.authenticated:
 
     elif page == "Recherche par espèce" :
         st.markdown("### 🔎 Recherche par espèce")
-        st.markdown(
-        "<div style='font-size:20px;'>"
-        "Entrez un nom d'espèce (vernaculaire ou scientifique) :"
-        "</div>",
-        unsafe_allow_html=True
-        )
 
         # Recherche avec auto-complétion
         search_input = st.text_input("Recherchez une espèce (nom scientifique ou vernaculaire) :")
@@ -568,7 +562,7 @@ if st.session_state.authenticated:
                 st.markdown(f"**Nom vernaculaire :** {selected_species['NOM_VERN']}")
                 
                 # Vérifier si elle est remarquable
-                match = df_metadonnees[df_metadonnees['CD_NOM'] == selected_cd_nom]
+                match = df_reference[df_reference['CD_NOM'] == selected_cd_nom]
                 
                 if not match.empty:
                     st.success("✅ Cette espèce est bien **remarquable pour l'ONF Normandie**.")
