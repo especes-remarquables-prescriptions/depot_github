@@ -104,6 +104,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
         return
 
     # Fusion avec la table de référence via CD_NOM
+    df = df.rename(columns={"Code taxon (cd_nom)": "CD_NOM"})
     df = df.merge(
         df_reference[["CD_NOM", "Indice_priorité_conservation", "Indice_priorité_réglementaire"]],
         on="CD_NOM", how="left"
