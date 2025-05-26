@@ -169,7 +169,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     # Légende personnalisée HTML avec des cercles colorés
     legend_html = """
     <div style="
-        position: fixed; 
+        position: absolute; 
         bottom: 50px; left: 50px; width: 250px; 
         background-color: white; 
         border:2px solid grey; 
