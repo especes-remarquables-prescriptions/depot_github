@@ -169,13 +169,13 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
             ).add_to(m)
 
     class Legend(MacroElement):
-    def __init__(self, legend_html):
-        super().__init__()
-        self._template = Template(f"""
-        {{% macro html(this, kwargs) %}}
-        {legend_html}
-        {{% endmacro %}}
-        """)
+        def __init__(self, legend_html):
+            super().__init__()
+            self._template = Template(f"""
+            {{% macro html(this, kwargs) %}}
+            {legend_html}
+            {{% endmacro %}}
+            """)
 
     # Légende personnalisée HTML avec des cercles colorés
     legend_html = """
