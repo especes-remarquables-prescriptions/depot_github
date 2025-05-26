@@ -5,6 +5,7 @@ import pandas as pd # Bibliothèque pour manipuler des données tabulaires
 import geopandas as gpd
 import folium
 from streamlit_folium import st_folium
+import streamlit.components.v1 import HTML
 
 # --------------------- FONCTIONS ---------------------
 
@@ -380,7 +381,7 @@ if st.session_state.authenticated:
 
 
     # Création d’un menu de navigation latéral
-    page = st.sidebar.radio("Aller à :",["Accueil", "Recherche par forêt", "Recherche par espèce"], label_visibility="collapsed")
+    page = st.sidebar.radio("Aller à :",["Accueil", "Recherche par forêt", "Recherche par espèce", "Référentiel espèces remarquables"], label_visibility="collapsed")
 
 
     # --------------------- CHARGEMENT DES DONNÉES ---------------------
@@ -685,3 +686,12 @@ if st.session_state.authenticated:
                         st.write(f"**Article de l'arrêté :** {traduire_statut(match['Article_arrêté'].iloc[0])}")
             else:
                 st.info("❌ Il n'existe pas de prescription environnementale pour cette espèce.")
+        
+    
+    # --------------------- PAGE REFERENTIEL ---------------------
+
+    elif page == "Référentiel espèces remarquables" :
+        st.markdown("### Référentiel espèces remarquables")
+        iframe_code = """<iframe width="402" height="346" frameborder="0" scrolling="no" src="https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={a5ba8dd8-f5bc-48ff-b60c-93625e6ec7aa}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>"""
+        html(iframe_code, height=600)
+        
