@@ -252,11 +252,11 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
 
             conserv_index = species_reference_info['Indice_priorité_conservation'].iloc[0]
             color = get_conservation_color(conserv_index)
-            st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité de conservation* :</b> {conserv_index}</div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité de conservation (*) :</b> {conserv_index}</div>""", unsafe_allow_html=True)
 
             reg_index = species_reference_info['Indice_priorité_réglementaire'].iloc[0]
             color_reg = get_reglementaire_color(reg_index)
-            st.markdown(f"""<div style='background-color: {color_reg}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité réglementaire* :</b> {reg_index}</div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div style='background-color: {color_reg}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité réglementaire (*) :</b> {reg_index}</div>""", unsafe_allow_html=True)
 
             st.markdown ("---")
             st.markdown(f"**Code unique clause :** {species_reference_info['Code_unique'].iloc[0]}")
@@ -268,10 +268,9 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 st.write(f"**Fiche vente (PRODUCTION BOIS) :** {species_reference_info['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
 
             st.markdown(f"**Rôle du TFT :** {species_reference_info['Rôle_TFT'].iloc[0]}")
-            st.markdown(f"**Pour aller plus loin :** {species_reference_info['Pour_aller_plus_loin'].iloc[0]}")
 
             st.markdown ("---")
-            with st.expander("*Légende des indices de priorité"):
+            with st.expander("(*) Légende des indices de priorité"):
                 st.markdown("""
                 **Indice de priorité de conservation** :
                 - `5` : Majeure
@@ -313,6 +312,10 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 else:
                     st.write("**Arrêté de protection :** Non Concerné")
                 st.write(f"**Article de l'arrêté :** {traduire_statut(species_reference_info['Article_arrêté'].iloc[0])}")
+            
+            with st.expander("📘 Pour aller plus loin"):
+                st.markdown(f"{species_reference_info['Pour_aller_plus_loin'].iloc[0]}")
+
         else:
             st.info("❌ Cette espèce ne fait pas l'objet de prescription environnementale.")
 
@@ -644,7 +647,7 @@ if st.session_state.authenticated:
 
                     st.markdown(f"""
                         <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité de conservation* :</b> {conserv_index}
+                        <b>Priorité de conservation (*) :</b> {conserv_index}
                         </div>
                         """, unsafe_allow_html=True)
                     
@@ -653,7 +656,7 @@ if st.session_state.authenticated:
 
                     st.markdown(f"""
                         <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité réglementaire* :</b> {reg_index}
+                        <b>Priorité réglementaire (*) :</b> {reg_index}
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -667,10 +670,9 @@ if st.session_state.authenticated:
                         st.write(f"**Libellé Fiche vente (PRODUCTION BOIS) :** {match['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
 
                     st.markdown(f"**Rôle du TFT :** {match['Rôle_TFT'].iloc[0]}")
-                    st.markdown(f"**Pour aller plus loin :** {match['Pour_aller_plus_loin'].iloc[0]}")
 
                     st.markdown ("---")
-                    with st.expander("*Légende des indices de priorité"):
+                    with st.expander("(*) Légende des indices de priorité"):
                         st.markdown("""
                         **Indice de priorité de conservation** :
                         - `5` : Priorité de conservation majeure
@@ -724,6 +726,10 @@ if st.session_state.authenticated:
                         else:
                             st.write("**Arrêté de protection :** Non Concerné")
                         st.write(f"**Article de l'arrêté :** {traduire_statut(match['Article_arrêté'].iloc[0])}")
+                    
+                    with st.expander("📘 Pour aller plus loin"):
+                        st.markdown(f"{match['Pour_aller_plus_loin'].iloc[0]}")
+
             else:
                 st.info("❌ Il n'existe pas de prescription environnementale pour cette espèce.")
         
