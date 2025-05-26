@@ -268,7 +268,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 st.write(f"**Fiche vente (PRODUCTION BOIS) :** {species_reference_info['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
 
             st.markdown(f"**Rôle du TFT :** {species_reference_info['Rôle_TFT'].iloc[0]}")
-            st.markodown(f"**Pour aller plus loin :** {species_reference_info['Pour_aller_plus_loin'].iloc[0]}")
+            st.markdown(f"**Pour aller plus loin :** {species_reference_info['Pour_aller_plus_loin'].iloc[0]}")
 
             st.markdown ("---")
             with st.expander("*Légende des indices de priorité"):
@@ -644,7 +644,7 @@ if st.session_state.authenticated:
 
                     st.markdown(f"""
                         <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité de conservation ℹ️ :</b> {conserv_index}
+                        <b>Priorité de conservation* :</b> {conserv_index}
                         </div>
                         """, unsafe_allow_html=True)
                     
@@ -653,7 +653,7 @@ if st.session_state.authenticated:
 
                     st.markdown(f"""
                         <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité réglementaire ℹ️ :</b> {reg_index}
+                        <b>Priorité réglementaire* :</b> {reg_index}
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -667,10 +667,10 @@ if st.session_state.authenticated:
                         st.write(f"**Libellé Fiche vente (PRODUCTION BOIS) :** {match['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
 
                     st.markdown(f"**Rôle du TFT :** {match['Rôle_TFT'].iloc[0]}")
-
+                    st.markdown(f"**Pour aller plus loin :** {match['Pour_aller_plus_loin'].iloc[0]}")
 
                     st.markdown ("---")
-                    with st.expander("ℹ️ Légende des indices de priorité"):
+                    with st.expander("*Légende des indices de priorité"):
                         st.markdown("""
                         **Indice de priorité de conservation** :
                         - `5` : Priorité de conservation majeure
