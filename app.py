@@ -177,27 +177,51 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
         st.markdown("""
         <div style="
             width: 100%;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
-            font-size: 14px;
             display: flex;
-            flex-wrap: nowrap;
-            gap: 20px;
-            align-items: center;
-            overflow-x: auto;
+            justify-content: center;
+            margin-bottom: 20px;
         ">
-            <div><span style="display:inline-block; width:14px; height:14px; background-color:#FF0000; border-radius:50%; margin-right:6px;"></span>Enjeu potentiellement majeur</div><br><br>
-            <div><span style="display:inline-block; width:14px; height:14px; background-color:#FF9900; border-radius:50%; margin-right:6px;"></span>Enjeu potentiellement fort</div><br><br>
-            <div><span style="display:inline-block; width:14px; height:14px; background-color:#FFFF00; border-radius:50%; margin-right:6px;"></span>Enjeu potentiellement élevé</div><br><br>
-            <div><span style="display:inline-block; width:14px; height:14px; background-color:#92D050; border-radius:50%; margin-right:6px;"></span>Enjeu modéré</div><br><br>
-            <div><span style="display:inline-block; width:14px; height:14px; background-color:#00B050; border-radius:50%; margin-right:6px;"></span>Enjeu faible</div><br><br>
-            <div><span style="display:inline-block; width:14px; height:14px; background-color:#D3D3D3; border-radius:50%; margin-right:6px;"></span>Enjeu inconnu</div>
+            <div style="
+                background-color: white;
+                border: 2px solid black;
+                border-radius: 10px;
+                padding: 12px 24px;
+                box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 24px;
+                font-size: 14px;
+                overflow-x: auto;
+            ">
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#FF0000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu majeur
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#FF9900; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu fort
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#FFFF00; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu élevé
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#92D050; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu modéré
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#00B050; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu faible
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#D3D3D3; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu inconnu
+                </div>
+            </div>
         </div>
         """, unsafe_allow_html=True)
+
         st_folium(m, height=600, returned_objects=[], use_container_width=True)
 
 
