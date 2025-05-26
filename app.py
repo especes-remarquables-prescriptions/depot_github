@@ -184,7 +184,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
         bottom: 100px; left: 10px; width: 190px; 
         background-color: white; 
         border:2px solid grey; 
-        z-index:100000; 
+        z-index:10000000000; 
         font-size:14px;
         padding: 10px;
         border-radius: 8px;
