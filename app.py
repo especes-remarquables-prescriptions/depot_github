@@ -90,9 +90,9 @@ def get_couleur_personnalisee(row):
             return couleurs[4]
         elif c == 3 or r == 2:
             return couleurs[3]
-        elif c == 2 and r <= 1:
+        elif c == 2 or r == 1:
             return couleurs[2]
-        elif c == 1 and r <= 1:
+        elif c == 1 or r == 0:
             return couleurs[1]
         else:
             return couleurs["default"]
