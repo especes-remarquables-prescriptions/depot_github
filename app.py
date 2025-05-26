@@ -181,9 +181,9 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
 
     <b>Légende des enjeux</b><br>
     <div style="margin-top:8px;">
-    <div><span style="display:inline-block; width:12px; height:12px; background-color:#FF0000; border-radius:50%; margin-right:8px;"></span>Enjeu majeur</div>
-    <div><span style="display:inline-block; width:12px; height:12px; background-color:#FF9900; border-radius:50%; margin-right:8px;"></span>Enjeu fort</div>
-    <div><span style="display:inline-block; width:12px; height:12px; background-color:#FFFF00; border-radius:50%; margin-right:8px;"></span>Enjeu élevé</div>
+    <div><span style="display:inline-block; width:12px; height:12px; background-color:#FF0000; border-radius:50%; margin-right:8px;"></span>Enjeu potentiellement majeur</div>
+    <div><span style="display:inline-block; width:12px; height:12px; background-color:#FF9900; border-radius:50%; margin-right:8px;"></span>Enjeu potentiellement fort</div>
+    <div><span style="display:inline-block; width:12px; height:12px; background-color:#FFFF00; border-radius:50%; margin-right:8px;"></span>Enjeu potentiellement élevé</div>
     <div><span style="display:inline-block; width:12px; height:12px; background-color:#92D050; border-radius:50%; margin-right:8px;"></span>Enjeu modéré</div>
     <div><span style="display:inline-block; width:12px; height:12px; background-color:#00B050; border-radius:50%; margin-right:8px;"></span>Enjeu faible</div>
     <div><span style="display:inline-block; width:12px; height:12px; background-color:#D3D3D3; border-radius:50%; margin-right:8px;"></span>Enjeu inconnu</div>
