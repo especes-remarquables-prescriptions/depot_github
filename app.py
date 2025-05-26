@@ -318,8 +318,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 if pd.notna(contenu) and contenu != "":
                     st.markdown(f"{contenu}")
                 else:
-                    # Ne rien afficher si vide ou NaN
-                    pass
+                    st.markdown("")
 
         else:
             st.info("❌ Cette espèce ne fait pas l'objet de prescription environnementale.")
