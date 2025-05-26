@@ -168,49 +168,36 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
                 popup=folium.Popup(popup, max_width=500)
             ).add_to(m)
 
-    class Legend(MacroElement):
-        def __init__(self, legend_html):
-            super().__init__()
-            self._template = Template(f"""
-            {{% macro html(this, kwargs) %}}
-            {legend_html}
-            {{% endmacro %}}
-            """)
-
-    # Légende personnalisée HTML avec des cercles colorés
-    legend_html = """
-    <div style="
-        position: absolute; 
-        bottom: 100px; left: 10px; width: 190px; 
-        background-color: white; 
-        border:2px solid grey; 
-        z-index:99; 
-        font-size:14px;
-        padding: 10px;
-        border-radius: 8px;
-        box-shadow: 2px 2px 6px rgba(0,0,0,0.3);">
-
-    <b>Légende des enjeux</b><br>
-    <div style="margin-top:8px;">
-    <div><span style="display:inline-block; width:12px; height:12px; background-color:#FF0000; border-radius:50%; margin-right:8px;"></span>Enjeu potentiellement majeur</div>
-    <div><span style="display:inline-block; width:12px; height:12px; background-color:#FF9900; border-radius:50%; margin-right:8px;"></span>Enjeu potentiellement fort</div>
-    <div><span style="display:inline-block; width:12px; height:12px; background-color:#FFFF00; border-radius:50%; margin-right:8px;"></span>Enjeu potentiellement élevé</div>
-    <div><span style="display:inline-block; width:12px; height:12px; background-color:#92D050; border-radius:50%; margin-right:8px;"></span>Enjeu modéré</div>
-    <div><span style="display:inline-block; width:12px; height:12px; background-color:#00B050; border-radius:50%; margin-right:8px;"></span>Enjeu faible</div>
-    <div><span style="display:inline-block; width:12px; height:12px; background-color:#D3D3D3; border-radius:50%; margin-right:8px;"></span>Enjeu inconnu</div>
-    </div>
-    </div>
-    """
-
-    # Ajouter la légende à la carte
-    m.add_child(Legend(legend_html))
-
     # Contrôle de couches
     folium.LayerControl().add_to(m)
 
     # Affichage dans Streamlit
     with st.container():
         st.markdown(f"### {titre}")
+        st.markdown("""
+        <div style="
+            width: 100%;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+            font-size: 14px;
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 20px;
+            align-items: center;
+            overflow-x: auto;
+        ">
+            <div><span style="display:inline-block; width:14px; height:14px; background-color:#FF0000; border-radius:50%; margin-right:6px;"></span>Enjeu majeur</div>
+            <div><span style="display:inline-block; width:14px; height:14px; background-color:#FF9900; border-radius:50%; margin-right:6px;"></span>Enjeu fort</div>
+            <div><span style="display:inline-block; width:14px; height:14px; background-color:#FFFF00; border-radius:50%; margin-right:6px;"></span>Enjeu élevé</div>
+            <div><span style="display:inline-block; width:14px; height:14px; background-color:#92D050; border-radius:50%; margin-right:6px;"></span>Enjeu modéré</div>
+            <div><span style="display:inline-block; width:14px; height:14px; background-color:#00B050; border-radius:50%; margin-right:6px;"></span>Enjeu faible</div>
+            <div><span style="display:inline-block; width:14px; height:14px; background-color:#D3D3D3; border-radius:50%; margin-right:6px;"></span>Enjeu inconnu</div>
+        </div>
+        """, unsafe_allow_html=True)
         st_folium(m, height=600, returned_objects=[], use_container_width=True)
 
 
