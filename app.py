@@ -314,7 +314,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 st.write(f"**Article de l'arrêté :** {traduire_statut(species_reference_info['Article_arrêté'].iloc[0])}")
             
             with st.expander("📘 Pour aller plus loin"):
-                contenu = match['Pour_aller_plus_loin'].iloc[0]
+                contenu = species_reference_info['Pour_aller_plus_loin'].iloc[0]
                 if pd.notna(contenu) and contenu != "":
                     st.markdown(f"{contenu}")
                 else:
