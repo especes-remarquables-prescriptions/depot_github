@@ -170,7 +170,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     legend_html = """
     <div style="
         position: absolute; 
-        bottom: 50px; left: 50px; width: 250px; 
+        bottom: 70px; left: 0px; width: 190px; 
         background-color: white; 
         border:2px solid grey; 
         z-index:9999; 
@@ -241,11 +241,11 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
 
             conserv_index = species_reference_info['Indice_priorité_conservation'].iloc[0]
             color = get_conservation_color(conserv_index)
-            st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité de conservation ℹ️ :</b> {conserv_index}</div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité de conservation* :</b> {conserv_index}</div>""", unsafe_allow_html=True)
 
             reg_index = species_reference_info['Indice_priorité_réglementaire'].iloc[0]
             color_reg = get_reglementaire_color(reg_index)
-            st.markdown(f"""<div style='background-color: {color_reg}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité réglementaire ℹ️ :</b> {reg_index}</div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div style='background-color: {color_reg}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité réglementaire* :</b> {reg_index}</div>""", unsafe_allow_html=True)
 
             st.markdown ("---")
             st.markdown(f"**Code unique clause :** {species_reference_info['Code_unique'].iloc[0]}")
@@ -257,9 +257,10 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 st.write(f"**Fiche vente (PRODUCTION BOIS) :** {species_reference_info['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
 
             st.markdown(f"**Rôle du TFT :** {species_reference_info['Rôle_TFT'].iloc[0]}")
+            st.markodown(f"**Pour aller plus loin :** {species_reference_info['Pour_aller_plus_loin'].iloc[0]}")
 
             st.markdown ("---")
-            with st.expander("ℹ️ Légende des indices de priorité"):
+            with st.expander("*Légende des indices de priorité"):
                 st.markdown("""
                 **Indice de priorité de conservation** :
                 - `5` : Majeure
