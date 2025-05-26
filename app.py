@@ -183,7 +183,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
         ">
             <div style="
                 background-color: white;
-                border: 2px solid black;
+                border: 1px solid black;
                 border-radius: 10px;
                 padding: 12px 24px;
                 box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
@@ -196,15 +196,15 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
             ">
                 <div style="display: flex; align-items: center;">
                     <span style="width:14px; height:14px; background-color:#FF0000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
-                    Enjeu majeur
+                    Enjeu potentiellement majeur
                 </div>
                 <div style="display: flex; align-items: center;">
                     <span style="width:14px; height:14px; background-color:#FF9900; border-radius:50%; margin-right:6px; display:inline-block;"></span>
-                    Enjeu fort
+                    Enjeu potentiellement fort
                 </div>
                 <div style="display: flex; align-items: center;">
                     <span style="width:14px; height:14px; background-color:#FFFF00; border-radius:50%; margin-right:6px; display:inline-block;"></span>
-                    Enjeu élevé
+                    Enjeu potentiellement élevé
                 </div>
                 <div style="display: flex; align-items: center;">
                     <span style="width:14px; height:14px; background-color:#92D050; border-radius:50%; margin-right:6px; display:inline-block;"></span>
