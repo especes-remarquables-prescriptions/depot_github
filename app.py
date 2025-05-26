@@ -170,7 +170,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     legend_html = """
     <div style="
         position: absolute; 
-        bottom: 70px; left: 0px; width: 190px; 
+        bottom: 100px; left: 10px; width: 190px; 
         background-color: white; 
         border:2px solid grey; 
         z-index:9999; 
