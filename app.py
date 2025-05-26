@@ -314,7 +314,12 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 st.write(f"**Article de l'arrêté :** {traduire_statut(species_reference_info['Article_arrêté'].iloc[0])}")
             
             with st.expander("📘 Pour aller plus loin"):
-                st.markdown(f"{species_reference_info['Pour_aller_plus_loin'].iloc[0]}")
+                contenu = match['Pour_aller_plus_loin'].iloc[0]
+                if pd.notna(contenu) and contenu != "":
+                    st.markdown(f"{contenu}")
+                else:
+                    # Ne rien afficher si vide ou NaN
+                    pass
 
         else:
             st.info("❌ Cette espèce ne fait pas l'objet de prescription environnementale.")
@@ -728,7 +733,12 @@ if st.session_state.authenticated:
                         st.write(f"**Article de l'arrêté :** {traduire_statut(match['Article_arrêté'].iloc[0])}")
                     
                     with st.expander("📘 Pour aller plus loin"):
-                        st.markdown(f"{match['Pour_aller_plus_loin'].iloc[0]}")
+                        contenu = match['Pour_aller_plus_loin'].iloc[0]
+                        if pd.notna(contenu) and contenu != "":
+                            st.markdown(f"{contenu}")
+                        else:
+                            # Ne rien afficher si vide ou NaN
+                            pass
 
             else:
                 st.info("❌ Il n'existe pas de prescription environnementale pour cette espèce.")
