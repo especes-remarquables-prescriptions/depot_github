@@ -6,6 +6,8 @@ import geopandas as gpd
 import folium
 from streamlit_folium import st_folium
 from streamlit.components.v1 import html
+from branca.element import MacroElement
+from jinja2 import Template
 
 # --------------------- FONCTIONS ---------------------
 
@@ -166,6 +168,15 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
                 popup=folium.Popup(popup, max_width=500)
             ).add_to(m)
 
+    class Legend(MacroElement):
+    def __init__(self, legend_html):
+        super().__init__()
+        self._template = Template(f"""
+        {{% macro html(this, kwargs) %}}
+        {legend_html}
+        {{% endmacro %}}
+        """)
+
     # Légende personnalisée HTML avec des cercles colorés
     legend_html = """
     <div style="
@@ -192,7 +203,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     """
 
     # Ajouter la légende à la carte
-    m.get_root().html.add_child(folium.Element(legend_html))
+    m.add_child(Legend(legend_html))
 
     # Contrôle de couches
     folium.LayerControl().add_to(m)
