@@ -5,7 +5,7 @@ import pandas as pd # Bibliothèque pour manipuler des données tabulaires
 import geopandas as gpd
 import folium
 from streamlit_folium import st_folium
-from streamlit.components.v1 import HTML
+from streamlit.components.v1 import html
 
 # --------------------- FONCTIONS ---------------------
 
