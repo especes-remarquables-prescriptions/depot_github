@@ -692,5 +692,5 @@ if st.session_state.authenticated:
 
     elif page == "Référentiel" :
         st.markdown("### Tableau référentiel des statuts des espèces remarquables pour l'ONF Normandie")
-        iframe_code = """<iframe width="700" height="900" frameborder="0" scrolling="no" src="https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={a5ba8dd8-f5bc-48ff-b60c-93625e6ec7aa}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>"""
+        iframe_code = """<iframe width="2000" height="1000" frameborder="0" scrolling="no" src="https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={a5ba8dd8-f5bc-48ff-b60c-93625e6ec7aa}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>"""
         html(iframe_code, height=600)
