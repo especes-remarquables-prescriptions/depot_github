@@ -692,5 +692,5 @@ if st.session_state.authenticated:
 
     elif page == "Référentiel espèces remarquables" :
         st.markdown("### Référentiel espèces remarquables")
-        iframe_code = """<iframe width="402" height="346" frameborder="0" scrolling="no" src="https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={a5ba8dd8-f5bc-48ff-b60c-93625e6ec7aa}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>"""
+        iframe_code = """<iframe width="2000" height="900" frameborder="0" scrolling="no" src="https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={a5ba8dd8-f5bc-48ff-b60c-93625e6ec7aa}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>"""
         html(iframe_code, height=600)
