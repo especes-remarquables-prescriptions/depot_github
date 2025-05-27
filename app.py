@@ -131,31 +131,31 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     m = folium.Map(location=[lat_centre, lon_centre], zoom_start=13, control_scale=True)
 
     # Ajout du fond de carte cadastre (WMS IGN)
-    folium.raster_layers.WmsTileLayer(
-        url="https://data.geopf.fr/wms-r/wms",
-        layers="CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
-        name="Cadastre",
-        fmt="image/png",
-        transparent=True,
-        version="1.3.0",
-        overlay=True,
-        control=True
-    ).add_to(m)
+    #folium.raster_layers.WmsTileLayer(
+        #url="https://data.geopf.fr/wms-r/wms",
+        #layers="CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
+        #name="Cadastre",
+        #fmt="image/png",
+        #transparent=True,
+        #version="1.3.0",
+        #overlay=True,
+        #control=True
+    #).add_to(m)
 
     # Ajout des points naturalistes
     for _, row in df.iterrows():
         if pd.notna(row["Coordonnée 1"]) and pd.notna(row["Coordonnée 2"]):
             couleur = get_couleur_personnalisee(row)
 
-            popup = f"""<b>Parcelle :</b> {row.get('Parcelle de forêt', '')}<br>
-            <b>Espèce :</b> {row.get('Espèce', 'Non renseignée')}<br>
+            popup = f"""<b>Parcelle :</b> {safe_get(row.get('Parcelle de forêt'))}<br>
+            <b>Espèce :</b> {safe_get(row.get('Espèce'))}<br>
             <b>Commentaire de la localisation :</b> {safe_get(row.get('Commentaire de la localisation'))}<br>
-            <b>Commentaire de l'observation :</b> {row.get("Commentaire de l'observation", '')}<br>
-            <b>Date d'observation :</b> {row.get("Date de début", '')}<br>
+            <b>Commentaire de l'observation :</b> {safe_get(row.get("Commentaire de l'observation"))}<br>
+            <b>Date d'observation :</b> {safe_get(row.get("Date de début"))}<br>
             <b>Coordonnée 1 :</b> {row["Coordonnée 1"]}<br>
             <b>Coordonnée 2 :</b> {row["Coordonnée 2"]}<br>
-            <b>Système de coordonnées :</b> {row.get("Système de coordonnées", '')}<br>
-            <b>Précision de la localisation :</b> {row.get("Précision de la localisation", '')}"""
+            <b>Système de coordonnées :</b> {safe_get(row.get("Système de coordonnées"))}<br>
+            <b>Précision de la localisation :</b> {safe_get(row.get("Précision de la localisation"))}"""
 
             folium.CircleMarker(
                 location=[row["Coordonnée 2"], row["Coordonnée 1"]],
