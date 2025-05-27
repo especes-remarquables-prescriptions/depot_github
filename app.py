@@ -5,9 +5,6 @@ import pandas as pd # Bibliothèque pour manipuler des données tabulaires
 import geopandas as gpd
 import folium
 from streamlit_folium import st_folium
-from streamlit.components.v1 import html
-from branca.element import MacroElement
-from jinja2 import Template
 
 # --------------------- FONCTIONS ---------------------
 
@@ -99,6 +96,9 @@ def get_couleur_personnalisee(row):
     except:
         return couleurs["default"]
 
+#Pour enlever l'affichage "nan"
+def safe_get(value):
+    return '' if pd.isna(value) else value
 
 # Fonction d'affichage des cartes
 def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
@@ -149,7 +149,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
 
             popup = f"""<b>Parcelle :</b> {row.get('Parcelle de forêt', '')}<br>
             <b>Espèce :</b> {row.get('Espèce', 'Non renseignée')}<br>
-            <b>Commentaire de la localisation :</b> {row.get('Commentaire de la localisation', '')}<br>
+            <b>Commentaire de la localisation :</b> {safe_get(row.get('Commentaire de la localisation')}<br>
             <b>Commentaire de l'observation :</b> {row.get("Commentaire de l'observation", '')}<br>
             <b>Date d'observation :</b> {row.get("Date de début", '')}<br>
             <b>Coordonnée 1 :</b> {row["Coordonnée 1"]}<br>
@@ -273,12 +273,13 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
             st.markdown(f"**Code unique clause :** {species_reference_info['Code_unique'].iloc[0]}")
             st.markdown(f"**Condition d'application de la clause :** {species_reference_info['Condition(s)_application_clause'].iloc[0]}")
 
+            st.markdown(f"**Rôle du TFT :** {species_reference_info['Rôle_TFT'].iloc[0]}")
+
             with st.expander("📋 Libellés des clauses à inscrire"):
                 st.write(f"**Fiche chantier (TECK) :** {species_reference_info['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
                 st.write(f"**Fiche désignation (DESIGNATION MOBILE) :** {species_reference_info['Libellé_fiche_désignation_ONF (DESIGNATION MOBILE)'].iloc[0]}")
                 st.write(f"**Fiche vente (PRODUCTION BOIS) :** {species_reference_info['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
 
-            st.markdown(f"**Rôle du TFT :** {species_reference_info['Rôle_TFT'].iloc[0]}")
 
             st.markdown ("---")
             with st.expander("(*) Légende des indices de priorité"):
@@ -678,13 +679,14 @@ if st.session_state.authenticated:
                     st.markdown ("---")
                     st.markdown(f"**Code unique clause :** {match['Code_unique'].iloc[0]}")
                     st.markdown(f"**Condition d'application de la clause :** {match['Condition(s)_application_clause'].iloc[0]}")
+
+                    st.markdown(f"**Rôle du TFT :** {match['Rôle_TFT'].iloc[0]}")
                     
                     with st.expander("📋 Libellés des clauses à inscrire"):
                         st.write(f"**Libellé Fiche chantier (TECK) :** {match['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
                         st.write(f"**Libellé Fiche désignation (DESIGNATION MOBILE) :** {match['Libellé_fiche_désignation_ONF (DESIGNATION MOBILE)'].iloc[0]}")
                         st.write(f"**Libellé Fiche vente (PRODUCTION BOIS) :** {match['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
 
-                    st.markdown(f"**Rôle du TFT :** {match['Rôle_TFT'].iloc[0]}")
 
                     st.markdown ("---")
                     with st.expander("(*) Légende des indices de priorité"):
