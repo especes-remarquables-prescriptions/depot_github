@@ -149,7 +149,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
 
             popup = f"""<b>Parcelle :</b> {row.get('Parcelle de forêt', '')}<br>
             <b>Espèce :</b> {row.get('Espèce', 'Non renseignée')}<br>
-            <b>Commentaire de la localisation :</b> {safe_get(row.get('Commentaire de la localisation')}<br>
+            <b>Commentaire de la localisation :</b> {safe_get(row.get('Commentaire de la localisation'))}<br>
             <b>Commentaire de l'observation :</b> {row.get("Commentaire de l'observation", '')}<br>
             <b>Date d'observation :</b> {row.get("Date de début", '')}<br>
             <b>Coordonnée 1 :</b> {row["Coordonnée 1"]}<br>
