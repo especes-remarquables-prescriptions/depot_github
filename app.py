@@ -5,6 +5,7 @@ import pandas as pd # Bibliothèque pour manipuler des données tabulaires
 import geopandas as gpd
 import folium
 from streamlit_folium import st_folium
+import html
 
 # --------------------- FONCTIONS ---------------------
 
@@ -96,9 +97,15 @@ def get_couleur_personnalisee(row):
     except:
         return couleurs["default"]
 
-#Pour enlever l'affichage "nan"
-def safe_get(value):
-    return '' if pd.isna(value) else value
+#Pour enlever sécuriser l'affichage des popus qui sinon peuvent faire bugger la carte
+def safe_get(val):
+    if pd.isna(val) or val in ["nan", "NaN", None]:
+        return ""
+    # Convertit en texte, échappe les caractères spéciaux HTML
+    val_str = str(val)
+    val_str = html.escape(val_str)  # échappe &, <, >, ", '
+    val_str = val_str.replace("\n", "<br>")  # gestion des retours à la ligne
+    return val_str
 
 # Fonction d'affichage des cartes
 def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
@@ -131,16 +138,16 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     m = folium.Map(location=[lat_centre, lon_centre], zoom_start=13, control_scale=True)
 
     # Ajout du fond de carte cadastre (WMS IGN)
-    #folium.raster_layers.WmsTileLayer(
-        #url="https://data.geopf.fr/wms-r/wms",
-        #layers="CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
-        #name="Cadastre",
-        #fmt="image/png",
-        #transparent=True,
-        #version="1.3.0",
-        #overlay=True,
-        #control=True
-    #).add_to(m)
+    folium.raster_layers.WmsTileLayer(
+        url="https://data.geopf.fr/wms-r/wms",
+        layers="CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
+        name="Cadastre",
+        fmt="image/png",
+        transparent=True,
+        version="1.3.0",
+        overlay=True,
+        control=True
+    ).add_to(m)
 
     # Ajout des points naturalistes
     for _, row in df.iterrows():
