@@ -6,7 +6,7 @@ import geopandas as gpd
 import folium
 from streamlit_folium import st_folium
 from streamlit.components.v1 import html
-import html
+import html as html2
 
 # --------------------- FONCTIONS ---------------------
 
