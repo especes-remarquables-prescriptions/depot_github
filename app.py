@@ -3,10 +3,11 @@
 import streamlit as st # Framework pour créer des applications web interactives
 import pandas as pd # Bibliothèque pour manipuler des données tabulaires
 import geopandas as gpd
-import folium
-from streamlit_folium import st_folium
-from streamlit.components.v1 import html
-import html as html2
+import folium #carte
+from streamlit_folium import st_folium #carte
+from streamlit.components.v1 import html #insertion excel online
+import html as html2 
+import io # export de donnees 
 
 # --------------------- FONCTIONS ---------------------
 
@@ -121,6 +122,20 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
         on="CD_NOM", how="left"
     )
 
+    # Fusion complète pour export
+    colonnes_reference = [
+        "Cat_naturaliste", "Nom_scientifique_valide", "LR_nat", "LR_reg", "Vulnérabilité", "Respo_reg",
+        "Indice_priorité_conservation",
+        "Directives_euro", "Plan_action", "Arrêté_protection_nationale", "Arrêté_protection_BN",
+        "Arrêté_protection_HN", "Article_arrêté", "Type_protection", "Conseils_gestion"
+    ]
+
+    df_export = df.merge(
+        df_reference[["CD_NOM"] + colonnes_reference],
+        on="CD_NOM", how="left"
+    )
+
+
     # Astuce CSS pour limiter la hauteur au chargement
     st.markdown("""
         <style>
@@ -230,6 +245,26 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
         </div>
         """, unsafe_allow_html=True)
 
+        buffer = io.BytesIO()
+        with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
+            df_export.to_excel(writer, index=False, sheet_name="Export aménagement")
+            writer.save()
+
+        # Encapsule le bouton dans un bloc aligné à droite
+        st.markdown("""
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        """, unsafe_allow_html=True)
+
+        st.download_button(
+            label="📥 Export aménagement",
+            data=buffer.getvalue(),
+            file_name="export_amenagement.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            key="download_xlsx_amenagement"
+        )
+
+        st.markdown("</div>", unsafe_allow_html=True)
+
         st_folium(m, height=600, returned_objects=[], use_container_width=True)
 
 
@@ -261,6 +296,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
         /* Style de l'expander ONF compact */
         details {
             background-color: #DDEEDD;
+            border: none;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -345,7 +381,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 st.write(f"**Article de l'arrêté :** {traduire_statut(species_reference_info['Article_arrêté'].iloc[0])}")
             
             with st.expander("➕ Pour aller plus loin"):
-                contenu = species_reference_info['Pour_aller_plus_loin'].iloc[0]
+                contenu = species_reference_info['Conseils_gestion'].iloc[0]
                 if pd.notna(contenu) and contenu != "":
                     st.markdown(f"{contenu}")
                 else:
@@ -669,6 +705,17 @@ if st.session_state.authenticated:
             """, unsafe_allow_html=True)
             match = df_reference[df_reference['CD_NOM'] == search_cd_nom]
 
+            # Injecter du CSS personnalisé pour modifier l'apparence des expanders
+            st.markdown("""
+                <style>
+                /* Style de l'expander ONF compact */
+                details {
+                    background-color: #DDEEDD;
+                    border: none;
+                }
+                </style>
+            """, unsafe_allow_html=True)
+
             st.subheader(f"📘 Statuts et prescriptions : {search_cd_nom}")
 
             if not match.empty and str(match['Rôle_TFT'].iloc[0]).strip().upper() != "N.C.":
@@ -682,7 +729,7 @@ if st.session_state.authenticated:
 
                     st.markdown(f"""
                         <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité de conservation🔸:</b> {conserv_index}
+                        <b>Priorité de conservatio*:</b> {conserv_index}
                         </div>
                         """, unsafe_allow_html=True)
                     
@@ -691,7 +738,7 @@ if st.session_state.authenticated:
 
                     st.markdown(f"""
                         <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité réglementaire🔸:</b> {reg_index}
+                        <b>Priorité réglementair*:</b> {reg_index}
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -701,14 +748,14 @@ if st.session_state.authenticated:
 
                     st.markdown(f"**Rôle du TFT :** {match['Rôle_TFT'].iloc[0]}")
                     
-                    with st.expander("📋 Libellés des clauses à inscrire"):
+                    with st.expander("📋 Libellé des clauses à inscrire"):
                         st.write(f"**Libellé Fiche chantier (TECK) :** {match['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
                         st.write(f"**Libellé Fiche désignation (DESIGNATION MOBILE) :** {match['Libellé_fiche_désignation_ONF (DESIGNATION MOBILE)'].iloc[0]}")
                         st.write(f"**Libellé Fiche vente (PRODUCTION BOIS) :** {match['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
 
 
                     st.markdown ("---")
-                    with st.expander("🔸Légende des indices de priorité"):
+                    with st.expander("*Légende des indices de priorité"):
                         st.markdown("""
                         **Indice de priorité de conservation** :
                         - `5` : Priorité de conservation majeure
@@ -740,7 +787,7 @@ if st.session_state.authenticated:
                     # Traduire en texte si possible
                     texte_respo = respo_dict.get(valeur_respo, "Non Renseigné")
 
-                    with st.expander("🟢 Détail des statuts"):
+                    with st.expander("📘 Détail des statuts"):
                         st.write(f"**Liste rouge régionale :** {traduire_statut(match['LR_reg'].iloc[0])}")
                         st.write(f"**Liste rouge nationale :** {traduire_statut(match['LR_nat'].iloc[0])}")
                         st.write(f"**Responsabilité régionale :** {texte_respo}")
@@ -763,8 +810,8 @@ if st.session_state.authenticated:
                             st.write("**Arrêté de protection :** Non Concerné")
                         st.write(f"**Article de l'arrêté :** {traduire_statut(match['Article_arrêté'].iloc[0])}")
                     
-                    with st.expander("📘 Pour aller plus loin"):
-                        contenu = match['Pour_aller_plus_loin'].iloc[0]
+                    with st.expander("➕ Pour aller plus loin"):
+                        contenu = match['Conseils_gestion'].iloc[0]
                         if pd.notna(contenu) and contenu != "":
                             st.markdown(f"{contenu}")
                         else:
