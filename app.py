@@ -260,8 +260,8 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
         <style>
         /* Style de l'expander ONF compact */
         details {
-            background-color: rgba(34, 85, 51, 0.12);  /* vert forêt doux, encore plus discret */
-            border: 1px solid rgba(34, 85, 51, 0.25);
+            background-color: #DDEEDD;
+            border: 1px solid #2E7D32;
             border-radius: 6px;
             padding: 2px 6px;
             margin-bottom: 6px;
