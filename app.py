@@ -8,6 +8,7 @@ from streamlit_folium import st_folium #carte
 from streamlit.components.v1 import html #insertion excel online
 import html as html2 
 import io # export de donnees 
+import os #chemin relatif des fichiers
 
 # --------------------- FONCTIONS ---------------------
 
@@ -432,7 +433,9 @@ if not st.session_state.authenticated:
     import base64
 
     # Charger l'image locale et l'encoder en base64
-    file_path = "logo ONF.png"
+    
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(BASE_DIR, "logo ONF.png")
 
     with open(file_path, "rb") as f:
         data = f.read()
@@ -466,7 +469,9 @@ if not st.session_state.authenticated:
 if st.session_state.authenticated:
 
     # Insertion du logo et configuration de la barre latérale
-    st.sidebar.image("logo ONF.png", width=250)
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(BASE_DIR, "logo ONF.png")
+    st.sidebar.image(file_path, width=250)
     st.sidebar.title("Navigation")
 
     st.sidebar.markdown("<div style='font-size:20px;'>Aller à :</div>", unsafe_allow_html=True)
@@ -493,18 +498,24 @@ if st.session_state.authenticated:
     # Chargement du fichier principal contenant les observations de la Base de données naturalistes de l'ONF
     @st.cache_data
     def load_data():
-        return pd.read_excel('MonExportBdn.xlsx')
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(base_path, "MonExportBdn.xlsx")
+        return pd.read_excel(file_path)
 
     # Chargement de la liste des codes CD_NOM autorisés (filtrage pour avoir uniquement les espèces du tableau de métadonnées des espèces remarquables)
     @st.cache_data
     def load_codes_autorises():
-        df_codes = pd.read_excel('Metadonnees.xlsx')
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(base_path, "Metadonnees.xlsx")
+        df_codes = pd.read_excel(file_path)
         return df_codes['CD_NOM'].astype(str).str.strip().tolist()
 
     # Chargement du fichier de référence des espèces avec leurs métadonnées
     @st.cache_data
     def load_reference_especes():
-        df_reference = pd.read_excel('Metadonnees.xlsx')
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(base_path, "Metadonnees.xlsx")
+        df_reference = pd.read_excel(file_path)
         return df_reference
 
     # Exécution des fonctions de chargement
@@ -679,7 +690,9 @@ if st.session_state.authenticated:
         </div>
         """, unsafe_allow_html=True)
 
-        st.image("inpn_ex.png", use_container_width=True)
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(BASE_DIR, "inpn_ex.png")
+        st.image(file_path, use_container_width=True)
 
         if search_cd_nom:
             search_cd_nom = search_cd_nom.strip()
@@ -816,5 +829,8 @@ if st.session_state.authenticated:
 
     elif page == "Référentiel" :
         st.markdown("### Tableau référentiel des statuts des espèces remarquables pour l'ONF Normandie")
+        st.markdown(
+        '[➡️ Voir le tableau Excel en ligne](https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={a5ba8dd8-f5bc-48ff-b60c-93625e6ec7aa}&action=embedview)'
+        )
         iframe_code = """<iframe width="2000" height="1000" frameborder="0" scrolling="no" src="https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={a5ba8dd8-f5bc-48ff-b60c-93625e6ec7aa}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>"""
         html(iframe_code, height=600)
