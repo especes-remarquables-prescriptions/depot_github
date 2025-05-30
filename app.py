@@ -194,20 +194,18 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     # Contrôle de couches
     folium.LayerControl().add_to(m)
 
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
+        df_export.to_excel(writer, index=False, sheet_name="Export aménagement")
+
+
     # Affichage dans Streamlit
     with st.container():
         st.markdown(f"### {titre}")
-        st.markdown("""
-        <div style="
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        ">
+        col1, col2 = st.columns([6, 1])  # Large légende à gauche, petit bouton à droite
 
-            <!-- Légende -->
+        with col1:
+            st.markdown("""
             <div style="
                 background-color: white;
                 border: 1px solid black;
@@ -220,7 +218,6 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
                 gap: 24px;
                 font-size: 14px;
                 overflow-x: auto;
-                max-width: 80%;
             ">
                 <div style="display: flex; align-items: center;">
                     <span style="width:14px; height:14px; background-color:#FF0000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
@@ -247,24 +244,18 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
                     Enjeu inconnu
                 </div>
             </div>
+            """, unsafe_allow_html=True)
 
-            <!-- Bouton export -->
-            <div style="margin-left: 10px;">
-        """, unsafe_allow_html=True)
-
-        buffer = io.BytesIO()
-        with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-            df_export.to_excel(writer, index=False, sheet_name="Export aménagement")
-            
-        st.download_button(
-            label="📥 Export aménagement",
-            data=buffer.getvalue(),
-            file_name="export_amenagement.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            key="download_xlsx_amenagement"
-        )
-
-        st.markdown("</div></div>", unsafe_allow_html=True)
+        with col2:
+            # Bouton déjà généré ci-dessus
+            st.write("")  # pour forcer un peu d'espace vertical
+            st.download_button(
+                label="📥 Export aménagement",
+                data=buffer.getvalue(),
+                file_name="export_amenagement.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                key="download_xlsx_amenagement"
+            )
 
         st_folium(m, height=600, returned_objects=[], use_container_width=True)
 
