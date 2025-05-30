@@ -258,31 +258,33 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
     # Injecter du CSS personnalisé pour modifier l'apparence des expanders
     st.markdown("""
         <style>
-        /* Style général des expanders */
+        /* Style de l'expander ONF compact */
         details {
-            background-color: rgba(0, 50, 0, 0.15);  /* Vert sapin transparent */
-            border: 1px solid rgba(0, 50, 0, 0.3);
+            background-color: rgba(34, 85, 51, 0.12);  /* vert forêt doux, encore plus discret */
+            border: 1px solid rgba(34, 85, 51, 0.25);
             border-radius: 6px;
-            padding: 4px 8px;
-            margin-bottom: 10px;
+            padding: 2px 6px;
+            margin-bottom: 6px;
         }
 
-        /* Réduction de la hauteur minimale et suppression de l'espace superflu */
         summary {
-            font-size: 0.9rem;
-            padding: 2px 0;
+            font-size: 0.85rem;          /* Police plus petite */
+            padding: 2px 4px;            /* Moins de padding */
             color: black;
             font-weight: 500;
+            margin: 0;
         }
 
-        /* Affichage en noir du contenu aussi */
+        /* Contenu de l’expander encore plus resserré */
         details > * {
+            margin: 0.2rem 0 !important;
+            padding: 0 !important;
             color: black !important;
         }
 
-        /* Optionnel : réduire les marges internes */
+        /* Réduction du padding interne ajouté par Streamlit */
         .stExpander > div {
-            padding: 0.2rem 0.5rem !important;
+            padding: 0.2rem 0.4rem !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -304,11 +306,11 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
 
             conserv_index = species_reference_info['Indice_priorité_conservation'].iloc[0]
             color = get_conservation_color(conserv_index)
-            st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité de conservation🔸:</b> {conserv_index}</div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité de conservation* :</b> {conserv_index}</div>""", unsafe_allow_html=True)
 
             reg_index = species_reference_info['Indice_priorité_réglementaire'].iloc[0]
             color_reg = get_reglementaire_color(reg_index)
-            st.markdown(f"""<div style='background-color: {color_reg}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité réglementaire🔸:</b> {reg_index}</div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div style='background-color: {color_reg}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité réglementaire* :</b> {reg_index}</div>""", unsafe_allow_html=True)
 
             st.markdown ("---")
             st.markdown(f"**Code unique clause :** {species_reference_info['Code_unique'].iloc[0]}")
@@ -323,7 +325,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
 
 
             st.markdown ("---")
-            with st.expander("🔸Légende des indices de priorité"):
+            with st.expander("*Légende des indices de priorité"):
                 st.markdown("""
                 **Indice de priorité de conservation** :
                 - `5` : Majeure
@@ -344,7 +346,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
             valeur_respo = species_reference_info['Respo_reg'].iloc[0]
             texte_respo = respo_dict.get(valeur_respo, "Non Renseigné")
 
-            with st.expander("🟢 Détail des statuts"):
+            with st.expander("📘 Détail des statuts"):
                 st.write(f"**Liste rouge régionale :** {traduire_statut(species_reference_info['LR_reg'].iloc[0])}")
                 st.write(f"**Liste rouge nationale :** {traduire_statut(species_reference_info['LR_nat'].iloc[0])}")
                 st.write(f"**Responsabilité régionale :** {texte_respo}")
@@ -366,7 +368,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                     st.write("**Arrêté de protection :** Non Concerné")
                 st.write(f"**Article de l'arrêté :** {traduire_statut(species_reference_info['Article_arrêté'].iloc[0])}")
             
-            with st.expander("📘 Pour aller plus loin"):
+            with st.expander("➕ Pour aller plus loin"):
                 contenu = species_reference_info['Pour_aller_plus_loin'].iloc[0]
                 if pd.notna(contenu) and contenu != "":
                     st.markdown(f"{contenu}")
