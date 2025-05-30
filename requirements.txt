@@ -4,3 +4,4 @@ openpyxl
 geopandas
 folium
 streamlit-folium
+XlsxWriter

@@ -246,7 +246,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
         """, unsafe_allow_html=True)
 
         buffer = io.BytesIO()
-        with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
+        with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
             df_export.to_excel(writer, index=False, sheet_name="Export aménagement")
             writer.save()
 
