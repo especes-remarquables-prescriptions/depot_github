@@ -202,7 +202,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     # Affichage dans Streamlit
     with st.container():
         st.markdown(f"### {titre}")
-        col1, col2 = st.columns([6, 1])  # Large légende à gauche, petit bouton à droite
+        col1, col2 = st.columns([5, 2])  # Large légende à gauche, petit bouton à droite
 
         with col1:
             st.markdown("""
