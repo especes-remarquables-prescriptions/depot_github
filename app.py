@@ -104,7 +104,7 @@ def safe_get(val):
         return ""
     # Convertit en texte, échappe les caractères spéciaux HTML
     val_str = str(val)
-    val_str = html.escape(val_str)  # échappe &, <, >, ", '
+    val_str = html2.escape(val_str)  # échappe &, <, >, ", '
     val_str = val_str.replace("\n", "<br>")  # gestion des retours à la ligne
     return val_str
 
