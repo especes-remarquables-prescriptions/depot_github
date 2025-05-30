@@ -266,26 +266,6 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
             padding: 2px 6px;
             margin-bottom: 6px;
         }
-
-        summary {
-            font-size: 0.85rem;          /* Police plus petite */
-            padding: 2px 4px;            /* Moins de padding */
-            color: black;
-            font-weight: 500;
-            margin: 0;
-        }
-
-        /* Contenu de l’expander encore plus resserré */
-        details > * {
-            margin: 0.2rem 0 !important;
-            padding: 0 !important;
-            color: black !important;
-        }
-
-        /* Réduction du padding interne ajouté par Streamlit */
-        .stExpander > div {
-            padding: 0.2rem 0.4rem !important;
-        }
         </style>
     """, unsafe_allow_html=True)
 
