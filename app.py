@@ -9,6 +9,7 @@ from streamlit.components.v1 import html #insertion excel online
 import html as html2 
 import io # export de donnees 
 import os #chemin relatif des fichiers
+from pathlib import Path
 
 # --------------------- FONCTIONS ---------------------
 
@@ -434,8 +435,7 @@ if not st.session_state.authenticated:
 
     # Charger l'image locale et l'encoder en base64
     
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(BASE_DIR, "logo ONF.png")
+    file_path = Path(__file__).parent / "logo ONF.png"
 
     with open(file_path, "rb") as f:
         data = f.read()
@@ -469,8 +469,7 @@ if not st.session_state.authenticated:
 if st.session_state.authenticated:
 
     # Insertion du logo et configuration de la barre latérale
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(BASE_DIR, "logo ONF.png")
+    file_path = Path(__file__).parent / "logo ONF.png"
     st.sidebar.image(file_path, width=250)
     st.sidebar.title("Navigation")
 
@@ -498,23 +497,20 @@ if st.session_state.authenticated:
     # Chargement du fichier principal contenant les observations de la Base de données naturalistes de l'ONF
     @st.cache_data
     def load_data():
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(base_path, "MonExportBdn.xlsx")
+        file_path = Path(__file__).parent / "MonExportBdn.xlsx"
         return pd.read_excel(file_path)
 
     # Chargement de la liste des codes CD_NOM autorisés (filtrage pour avoir uniquement les espèces du tableau de métadonnées des espèces remarquables)
     @st.cache_data
     def load_codes_autorises():
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(base_path, "Metadonnees.xlsx")
+        file_path = Path(__file__).parent / "Metadonnees.xlsx"
         df_codes = pd.read_excel(file_path)
         return df_codes['CD_NOM'].astype(str).str.strip().tolist()
 
     # Chargement du fichier de référence des espèces avec leurs métadonnées
     @st.cache_data
     def load_reference_especes():
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(base_path, "Metadonnees.xlsx")
+        file_path = Path(__file__).parent / "Metadonnees.xlsx"
         df_reference = pd.read_excel(file_path)
         return df_reference
 
@@ -690,8 +686,8 @@ if st.session_state.authenticated:
         </div>
         """, unsafe_allow_html=True)
 
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(BASE_DIR, "inpn_ex.png")
+        file_path = Path(__file__).parent / "inpn_ex.png"
+
         st.image(file_path, use_container_width=True)
 
         if search_cd_nom:
