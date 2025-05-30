@@ -201,9 +201,13 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
         <div style="
             width: 100%;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         ">
+
+            <!-- Légende -->
             <div style="
                 background-color: white;
                 border: 1px solid black;
@@ -216,6 +220,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
                 gap: 24px;
                 font-size: 14px;
                 overflow-x: auto;
+                max-width: 80%;
             ">
                 <div style="display: flex; align-items: center;">
                     <span style="width:14px; height:14px; background-color:#FF0000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
@@ -242,16 +247,9 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
                     Enjeu inconnu
                 </div>
             </div>
-        </div>
-        """, unsafe_allow_html=True)
 
-        buffer = io.BytesIO()
-        with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-            df_export.to_excel(writer, index=False, sheet_name="Export aménagement")
-
-        # Encapsule le bouton dans un bloc aligné à droite
-        st.markdown("""
-            <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+            <!-- Bouton export -->
+            <div style="margin-left: 10px;">
         """, unsafe_allow_html=True)
 
         st.download_button(
@@ -262,7 +260,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
             key="download_xlsx_amenagement"
         )
 
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("</div></div>", unsafe_allow_html=True)
 
         st_folium(m, height=600, returned_objects=[], use_container_width=True)
 
