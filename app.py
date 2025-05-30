@@ -255,6 +255,33 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
     # On récupère le cd_nom correspondant au nom d’espèce sélectionné
     selected_species = reverse_dict.get(selected_label)
 
+    # Injecter du CSS personnalisé pour modifier l'apparence des expanders
+    st.markdown("""
+        <style>
+        /* Changer couleur de fond et bordure de tous les expanders */
+        details {
+            background-color: #ffe6e6;
+            border: 2px solid #ff4d4d;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Changer la couleur du texte du résumé (titre) */
+        summary {
+            color: #b30000;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        /* Effet au survol */
+        details:hover {
+            background-color: #fff0f0;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+
     if selected_species:
         selected_species = str(selected_species).strip()
         df_reference['CD_NOM'] = df_reference['CD_NOM'].astype(str).str.strip()
@@ -271,11 +298,11 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
 
             conserv_index = species_reference_info['Indice_priorité_conservation'].iloc[0]
             color = get_conservation_color(conserv_index)
-            st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité de conservation (*) :</b> {conserv_index}</div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité de conservation🔸:</b> {conserv_index}</div>""", unsafe_allow_html=True)
 
             reg_index = species_reference_info['Indice_priorité_réglementaire'].iloc[0]
             color_reg = get_reglementaire_color(reg_index)
-            st.markdown(f"""<div style='background-color: {color_reg}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité réglementaire (*) :</b> {reg_index}</div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div style='background-color: {color_reg}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité réglementaire🔸:</b> {reg_index}</div>""", unsafe_allow_html=True)
 
             st.markdown ("---")
             st.markdown(f"**Code unique clause :** {species_reference_info['Code_unique'].iloc[0]}")
@@ -290,7 +317,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
 
 
             st.markdown ("---")
-            with st.expander("(*) Légende des indices de priorité"):
+            with st.expander("🔸Légende des indices de priorité"):
                 st.markdown("""
                 **Indice de priorité de conservation** :
                 - `5` : Majeure
@@ -671,7 +698,7 @@ if st.session_state.authenticated:
 
                     st.markdown(f"""
                         <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité de conservation (*) :</b> {conserv_index}
+                        <b>Priorité de conservation🔸:</b> {conserv_index}
                         </div>
                         """, unsafe_allow_html=True)
                     
@@ -680,7 +707,7 @@ if st.session_state.authenticated:
 
                     st.markdown(f"""
                         <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité réglementaire (*) :</b> {reg_index}
+                        <b>Priorité réglementaire🔸:</b> {reg_index}
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -697,7 +724,7 @@ if st.session_state.authenticated:
 
 
                     st.markdown ("---")
-                    with st.expander("(*) Légende des indices de priorité"):
+                    with st.expander("🔸Légende des indices de priorité"):
                         st.markdown("""
                         **Indice de priorité de conservation** :
                         - `5` : Priorité de conservation majeure
@@ -729,7 +756,7 @@ if st.session_state.authenticated:
                     # Traduire en texte si possible
                     texte_respo = respo_dict.get(valeur_respo, "Non Renseigné")
 
-                    with st.expander("🟢Détail des statuts"):
+                    with st.expander("🟢 Détail des statuts"):
                         st.write(f"**Liste rouge régionale :** {traduire_statut(match['LR_reg'].iloc[0])}")
                         st.write(f"**Liste rouge nationale :** {traduire_statut(match['LR_nat'].iloc[0])}")
                         st.write(f"**Responsabilité régionale :** {texte_respo}")
