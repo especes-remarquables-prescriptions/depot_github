@@ -814,8 +814,7 @@ if st.session_state.authenticated:
                         if pd.notna(contenu) and contenu != "":
                             st.markdown(f"{contenu}")
                         else:
-                            # Ne rien afficher si vide ou NaN
-                            pass
+                            st.markdown("")
 
             else:
                 st.info("❌ Il n'existe pas de prescription environnementale pour cette espèce.")
@@ -826,7 +825,7 @@ if st.session_state.authenticated:
     elif page == "Référentiel" :
         st.markdown("### Tableau référentiel des statuts des espèces remarquables pour l'ONF Normandie")
         st.markdown(
-        '[➡️ Voir le tableau Excel en ligne](https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={a5ba8dd8-f5bc-48ff-b60c-93625e6ec7aa}&action=embedview)'
+        '[➡️ Voir le tableau Excel en ligne](https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={719dad7b-de23-4680-8262-4083c17d5603}&action=embedview)'
         )
-        iframe_code = """<iframe width="2000" height="1000" frameborder="0" scrolling="no" src="https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={a5ba8dd8-f5bc-48ff-b60c-93625e6ec7aa}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>"""
+        iframe_code = """<iframe width="2000" height="1000" frameborder="0" scrolling="no" src="https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={719dad7b-de23-4680-8262-4083c17d5603}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>"""
         html(iframe_code, height=600)
