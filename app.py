@@ -258,25 +258,31 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
     # Injecter du CSS personnalisé pour modifier l'apparence des expanders
     st.markdown("""
         <style>
-        /* Changer couleur de fond et bordure de tous les expanders */
+        /* Style général des expanders */
         details {
-            background-color: #ffe6e6;
-            border: 2px solid #ff4d4d;
-            border-radius: 8px;
-            padding: 10px;
+            background-color: rgba(0, 50, 0, 0.15);  /* Vert sapin transparent */
+            border: 1px solid rgba(0, 50, 0, 0.3);
+            border-radius: 6px;
+            padding: 4px 8px;
             margin-bottom: 10px;
         }
 
-        /* Changer la couleur du texte du résumé (titre) */
+        /* Réduction de la hauteur minimale et suppression de l'espace superflu */
         summary {
-            color: #b30000;
-            font-weight: bold;
-            font-size: 1.1em;
+            font-size: 0.9rem;
+            padding: 2px 0;
+            color: black;
+            font-weight: 500;
         }
 
-        /* Effet au survol */
-        details:hover {
-            background-color: #fff0f0;
+        /* Affichage en noir du contenu aussi */
+        details > * {
+            color: black !important;
+        }
+
+        /* Optionnel : réduire les marges internes */
+        .stExpander > div {
+            padding: 0.2rem 0.5rem !important;
         }
         </style>
     """, unsafe_allow_html=True)
