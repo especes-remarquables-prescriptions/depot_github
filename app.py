@@ -261,10 +261,6 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
         /* Style de l'expander ONF compact */
         details {
             background-color: #DDEEDD;
-            border: 1px solid #2E7D32;
-            border-radius: 6px;
-            padding: 2px 6px;
-            margin-bottom: 6px;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -298,7 +294,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
 
             st.markdown(f"**Rôle du TFT :** {species_reference_info['Rôle_TFT'].iloc[0]}")
 
-            with st.expander("📋 Libellés des clauses à inscrire"):
+            with st.expander("📋 Libellé des clauses à inscrire"):
                 st.write(f"**Fiche chantier (TECK) :** {species_reference_info['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
                 st.write(f"**Fiche désignation (DESIGNATION MOBILE) :** {species_reference_info['Libellé_fiche_désignation_ONF (DESIGNATION MOBILE)'].iloc[0]}")
                 st.write(f"**Fiche vente (PRODUCTION BOIS) :** {species_reference_info['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
