@@ -248,7 +248,6 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
         buffer = io.BytesIO()
         with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
             df_export.to_excel(writer, index=False, sheet_name="Export aménagement")
-            writer.save()
 
         # Encapsule le bouton dans un bloc aligné à droite
         st.markdown("""
