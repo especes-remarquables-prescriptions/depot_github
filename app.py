@@ -247,32 +247,13 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
             """, unsafe_allow_html=True)
 
         with col2:
-            # Applique du CSS directement au bouton
-            st.markdown("""
-                <style>
-                    .custom-button .stDownloadButton > button {
-                        background-color: white;
-                        border: 1px solid black;
-                        border-radius: 10px;
-                        padding: 12px 24px;
-                        box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
-                        font-size: 14px;
-                    }
-                </style>
-            """, unsafe_allow_html=True)
-
-            with st.container():
-                st.markdown('<div class="custom-button">', unsafe_allow_html=True)
-
-                st.download_button(
-                    label="📥 Export aménagement",
-                    data=buffer.getvalue(),
-                    file_name="export_amenagement.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    key="download_xlsx_amenagement"
-                )
-
-                st.markdown('</div>', unsafe_allow_html=True)
+            st.download_button(
+                label="📥 Export aménagement",
+                data=buffer.getvalue(),
+                file_name="export_amenagement.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                key="download_xlsx_amenagement"
+            )
 
         st_folium(m, height=600, returned_objects=[], use_container_width=True)
 
