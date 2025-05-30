@@ -247,8 +247,20 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
             """, unsafe_allow_html=True)
 
         with col2:
-            # Bouton déjà généré ci-dessus
-            st.write("")  # pour forcer un peu d'espace vertical
+            st.markdown("""
+            <div style="
+                background-color: white;
+                border: 1px solid black;
+                border-radius: 10px;
+                padding: 12px 24px;
+                box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+            ">
+            """, unsafe_allow_html=True)
+
             st.download_button(
                 label="📥 Export aménagement",
                 data=buffer.getvalue(),
@@ -256,6 +268,8 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 key="download_xlsx_amenagement"
             )
+
+            st.markdown("</div>", unsafe_allow_html=True)
 
         st_folium(m, height=600, returned_objects=[], use_container_width=True)
 
