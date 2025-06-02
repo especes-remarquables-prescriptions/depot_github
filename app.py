@@ -342,7 +342,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 - `4` : Risque réglementaire majeur (Espèce réglementée au niveau européen + national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
                 - `3` : Risque réglementaire élevé (Espèce réglementée au niveau national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
                 - `2` : Risque réglementaire uniquement si les interventions forestières impactent les spécimens.
-                - `1` : La gestion forestière courante de l'ONF suffit à respecter la réglementation associée à l'espèce, que ce soit sur les spécimens ou sur les éléments nécessaires au bon fonctionnement de leur cycle biologique.
+                - `1` : La gestion forestière courante de l'ONF suffit à conserver le bon état des populations de l'espèce à l'échelle du massif.
                 - `0` : Espèce non protégée.
                 """)
 
@@ -767,7 +767,7 @@ if st.session_state.authenticated:
                         - `4` : Risque réglementaire majeur (Espèce réglementée au niveau européen + national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
                         - `3` : Risque réglementaire élevé (Espèce réglementée au niveau national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
                         - `2` : Risque réglementaire uniquement si les interventions forestières impactent les spécimens.
-                        - `1` : La gestion forestière courante de l'ONF suffit à respecter la réglementation associée à l'espèce, que ce soit sur les spécimens ou sur les éléments nécessaires au bon fonctionnement de leur cycle biologique.
+                        - `1` : La gestion forestière courante de l'ONF suffit à conserver le bon état des populations de l'espèce à l'échelle du massif.
                         - `0` : Espèce non protégée.
                         """)
 
