@@ -42,11 +42,11 @@ def traduire_statut(statut):
 # Fonction pour obtenir une couleur en fonction de l’indice de priorité de conservation
 def get_conservation_color(index):
     colors = {
-        1: '#00B050',  # vert foncé
-        2: '#92D050',  # vert clair
-        3: '#FFFF00',  # jaune
-        4: '#FF9900',  # orange
-        5: '#FF0000',  # rouge
+        1: '#FFFFFF',  # blanc
+        2: '#FBEAEA',  # rouge très pâle
+        3: '#F5BDBD',  # rose pastel
+        4: '#EB8888',  # rouge moyen doux
+        5: '#B03C3C',  # rouge profond
     }
     return colors.get(index, '#ffffff')  # Blanc par défaut si l’indice est inconnu
 
@@ -54,11 +54,11 @@ def get_conservation_color(index):
 # Fonction pour obtenir une couleur en fonction de l’indice de priorité réglementaire
 def get_reglementaire_color(index):
     colors = {
-        0: '#00B050',  # vert foncé
-        1: '#92D050',  # vert clair
-        2: '#FFFF00',  # jaune
-        3: '#FF9900',  # orange
-        4: '#FF0000',  # rouge
+        0: '#FFFFFF',  # blanc
+        1: '#FBEAEA',  # rouge très pâle
+        2: '#F5BDBD',  # rose pastel
+        3: '#EB8888',  # rouge moyen doux
+        4: '#B03C3C',  # rouge profond
     }
     return colors.get(index, '#ffffff') # Blanc par défaut si l’indice est inconnu
 
@@ -336,11 +336,11 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
             with st.expander("*Légende des indices de priorité"):
                 st.markdown("""
                 **Indice de priorité de conservation** :
-                - `5` : Majeure
-                - `4` : Très élevée 
-                - `3` : Élevée
-                - `2` : Modérée
-                - `1` : Faible
+                - `5` : Priorité de conservation cruciale
+                - `4` : Priorité de conservation majeure 
+                - `3` : Priorité de conservation forte
+                - `2` : Priorité de conservation significative
+                - `1` : Priorité de conservation modérée
 
                 **Indice de priorité réglementaire** :
                 - `4` : Risque réglementaire majeur (Espèce réglementée au niveau européen + national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
@@ -768,11 +768,11 @@ if st.session_state.authenticated:
                     with st.expander("*Légende des indices de priorité"):
                         st.markdown("""
                         **Indice de priorité de conservation** :
-                        - `5` : Priorité de conservation majeure
-                        - `4` : Priorité de conservation très élevée 
-                        - `3` : Priorité de conservation élevée
-                        - `2` : Priorité de conservation modérée
-                        - `1` : Priorité de conservation faible
+                        - `5` : Priorité de conservation cruciale
+                        - `4` : Priorité de conservation majeure
+                        - `3` : Priorité de conservation forte
+                        - `2` : Priorité de conservation significative
+                        - `1` : Priorité de conservation modérée
 
                         **Indice de priorité réglementaire** :
                         - `4` : Risque réglementaire majeur (Espèce réglementée au niveau européen + national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
