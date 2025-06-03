@@ -131,7 +131,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
 
     # Fusion complète pour export
     colonnes_reference = [
-        "Cat_naturaliste", "Nom_scientifique_valide", "LR_nat", "LR_reg", "Vulnérabilité", "Respo_reg",
+        "Cat_naturaliste", "Nom_scientifique_valide", "LR_nat", "LR_reg",
         "Indice_priorité_conservation",
         "Directives_euro", "Plan_action", "Arrêté_protection_nationale", "Arrêté_protection_BN",
         "Arrêté_protection_HN", "Article_arrêté", "Type_protection", "Conseils_gestion"
@@ -202,8 +202,8 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
 
     buffer = io.BytesIO()
     with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-        df_export.to_excel(writer, sheet_name="Export aménagement", index=False)
         df_notice.to_excel(writer, sheet_name="Notice", index=False)
+        df_export.to_excel(writer, sheet_name="Export aménagement", index=False)
 
     # Affichage dans Streamlit
     with st.container():
