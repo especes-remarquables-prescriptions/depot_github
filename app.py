@@ -119,8 +119,13 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
 
     # Fusion avec la table de référence via CD_NOM
     df = df.rename(columns={"Code taxon (cd_nom)": "CD_NOM"})
-    df = df.merge(
+    df_popup = df.merge(
         df_reference[["CD_NOM", "Indice_priorité_conservation", "Indice_priorité_réglementaire"]],
+        on="CD_NOM", how="left"
+    )
+
+    df_fusion = df.merge(
+        df_reference[["CD_NOM"]],
         on="CD_NOM", how="left"
     )
 
@@ -132,11 +137,10 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
         "Arrêté_protection_HN", "Article_arrêté", "Type_protection", "Conseils_gestion"
     ]
 
-    df_export = df.merge(
+    df_export = df_fusion.merge(
         df_reference[["CD_NOM"] + colonnes_reference],
         on="CD_NOM", how="left"
     )
-
 
     # Astuce CSS pour limiter la hauteur au chargement
     st.markdown("""
@@ -168,7 +172,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     ).add_to(m)
 
     # Ajout des points naturalistes
-    for _, row in df.iterrows():
+    for _, row in df_popup.iterrows():
         if pd.notna(row["Coordonnée 1"]) and pd.notna(row["Coordonnée 2"]):
             couleur = get_couleur_personnalisee(row)
 
@@ -198,8 +202,8 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
 
     buffer = io.BytesIO()
     with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-        df_export.to_excel(writer, index=False, sheet_name="Export aménagement")
-
+        df_export.to_excel(writer, sheet_name="Export aménagement", index=False)
+        df_notice.to_excel(writer, sheet_name="Notice", index=False)
 
     # Affichage dans Streamlit
     with st.container():
@@ -514,10 +518,17 @@ if st.session_state.authenticated:
         df_reference = pd.read_excel(file_path)
         return df_reference
 
+    # Chargement de la notice de l'export aménagement
+    @st.cache_data
+    def load_notice():
+        file_path = Path(__file__).parent / "Notice_export.xlsx"
+        return pd.read_excel(file_path)
+
     # Exécution des fonctions de chargement
     df = load_data()
     codes_autorises = load_codes_autorises()
     df_reference = load_reference_especes()
+    df_notice = load_notice()
 
     # Nettoyage des colonnes pour garantir l'uniformité des CD_NOM
     df_reference['CD_NOM'] = df_reference['CD_NOM'].astype(str).str.strip()
