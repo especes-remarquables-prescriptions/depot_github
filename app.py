@@ -43,10 +43,10 @@ def traduire_statut(statut):
 def get_conservation_color(index):
     colors = {
         1: '#FFFFFF',  # blanc
-        2: '#F9EAEA',  # rouge très pâle
-        3: '#F5CCCC',  # rose pastel
-        4: '#EEAFAF',  # rouge moyen doux
-        5: '#E88F8F',  # rouge profond
+        2: '#FDE9EA',  # rouge très pâle
+        3: '#FFB7B7',  # rose pastel
+        4: '#FF797C',  # rouge moyen doux
+        5: '#FF0000',  # rouge profond
     }
     return colors.get(index, '#ffffff')  # Blanc par défaut si l’indice est inconnu
 
@@ -55,10 +55,10 @@ def get_conservation_color(index):
 def get_reglementaire_color(index):
     colors = {
         0: '#FFFFFF',  # blanc
-        1: '#F9EAEA',  # rouge très pâle
-        2: '#F5CCCC',  # rose pastel
-        3: '#EEAFAF',  # rouge moyen doux
-        4: '#E88F8F',  # rouge profond
+        1: '#FDE9EA',  # rouge très pâle
+        2: '#FFB7B7',  # rose pastel
+        3: '#FF797C',  # rouge moyen doux
+        4: '#FF0000',  # rouge profond
     }
     return colors.get(index, '#ffffff') # Blanc par défaut si l’indice est inconnu
 
