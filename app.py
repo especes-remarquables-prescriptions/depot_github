@@ -43,10 +43,10 @@ def traduire_statut(statut):
 def get_conservation_color(index):
     colors = {
         1: '#FFFFFF',  # blanc
-        2: '#FBEAEA',  # rouge très pâle
-        3: '#F5BDBD',  # rose pastel
-        4: '#EB8888',  # rouge moyen doux
-        5: '#B03C3C',  # rouge profond
+        2: '#F9EAEA',  # rouge très pâle
+        3: '#F5CCCC',  # rose pastel
+        4: '#EEAFAF',  # rouge moyen doux
+        5: '#E88F8F',  # rouge profond
     }
     return colors.get(index, '#ffffff')  # Blanc par défaut si l’indice est inconnu
 
@@ -55,10 +55,10 @@ def get_conservation_color(index):
 def get_reglementaire_color(index):
     colors = {
         0: '#FFFFFF',  # blanc
-        1: '#FBEAEA',  # rouge très pâle
-        2: '#F5BDBD',  # rose pastel
-        3: '#EB8888',  # rouge moyen doux
-        4: '#B03C3C',  # rouge profond
+        1: '#F9EAEA',  # rouge très pâle
+        2: '#F5CCCC',  # rose pastel
+        3: '#EEAFAF',  # rouge moyen doux
+        4: '#E88F8F',  # rouge profond
     }
     return colors.get(index, '#ffffff') # Blanc par défaut si l’indice est inconnu
 
@@ -70,7 +70,7 @@ def reset_all():
     st.session_state.view = "start"
     st.session_state.reset_requested = True
 
-# Dictionnaire des couleurs de popup de la carte par niveau de priorité conservation
+# Dictionnaire des couleurs de point de la carte par niveau de priorité conservation
 couleurs = {
     1: "#00B050",   # vert foncé
     2: "#92D050",   # vert clair
@@ -80,7 +80,7 @@ couleurs = {
     "default": "#D3D3D3"  # gris clair
 }
 
-# Détermination de la couleur du popup de la carte d'après les indices
+# Détermination de la couleur du point de la carte d'après les indices
 def get_couleur_personnalisee(row):
     c = row["Indice_priorité_conservation"]
     r = row["Indice_priorité_réglementaire"]
