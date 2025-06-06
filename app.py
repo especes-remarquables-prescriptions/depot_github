@@ -184,8 +184,8 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
             <b>Commentaire de la localisation :</b> {safe_get(row.get('Commentaire de la localisation'))}<br>
             <b>Commentaire de l'observation :</b> {safe_get(row.get("Commentaire de l'observation"))}<br>
             <b>Commentaire du relevé :</b> {safe_get(row.get("Commentaire du relevé"))}<br>
-            <b>Date d'observation :</b> {safe_get(row.get("Date de début"))}<br>
-            <b>Surface de la géométrie : </b> {row["Surface de la géométrie"]}<br>
+            <b>Date d'observation :</b> {safe_get(row.get("Date début"))}<br>
+            <b>Surface de la géométrie :</b> {row["Surface de la géométrie"]}<br>
             <b>Système de coordonnées :</b> {safe_get(row.get("Système de coordonnées"))}<br>
             """
 
@@ -349,12 +349,12 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 - `1` : Priorité de conservation modérée
 
                 **Indice de priorité réglementaire** :
-                - `4` : Risque réglementaire majeur (Espèce réglementée au niveau européen + national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                - `3` : Risque réglementaire élevé (Espèce réglementée au niveau national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                - `2` : Risque réglementaire uniquement si les interventions forestières impactent les spécimens.
-                - `1` : La gestion forestière courante de l'ONF suffit à conserver le bon état des populations de l'espèce à l'échelle du massif.
-                - `0` : Espèce non protégée.
-                """)
+                        - `4` : Risque réglementaire majeur (Espèce d'intérêt européen + protection nationale ou régionale).
+                        - `3` : Risque réglementaire élevé (Protection nationale ou régionale) si altération des spécimens OU des éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
+                        - `2` : Risque réglementaire uniquement si altération des spécimens.
+                        - `1` : La gestion forestière courante de l'ONF suffit à conserver le bon état des populations de l'espèce à l'échelle du massif.
+                        - `0` : Espèce non protégée.
+                        """)
 
             respo_dict = {1: "Faible", 2: "Modérée", 3: "Significative", 4: "Forte", 5: "Majeure"}
             valeur_respo = species_reference_info['Respo_reg'].iloc[0]
@@ -781,9 +781,9 @@ if st.session_state.authenticated:
                         - `1` : Priorité de conservation modérée
 
                         **Indice de priorité réglementaire** :
-                        - `4` : Risque réglementaire majeur (Espèce réglementée au niveau européen + national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                        - `3` : Risque réglementaire élevé (Espèce réglementée au niveau national ou régional) si les interventions forestières impactent les spécimens OU les éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                        - `2` : Risque réglementaire uniquement si les interventions forestières impactent les spécimens.
+                        - `4` : Risque réglementaire majeur (Espèce d'intérêt européen + protection nationale ou régionale).
+                        - `3` : Risque réglementaire élevé (Protection nationale ou régionale) si altération des spécimens OU des éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
+                        - `2` : Risque réglementaire uniquement si altération des spécimens.
                         - `1` : La gestion forestière courante de l'ONF suffit à conserver le bon état des populations de l'espèce à l'échelle du massif.
                         - `0` : Espèce non protégée.
                         """)
