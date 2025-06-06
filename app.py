@@ -125,7 +125,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     )
 
     # Colonnes à afficher
-    colonnes_a_afficher = ['Forêt', 'Code taxon (cd_nom)', 'Date début', 'Espèce', 'Commentaire du relevé', 'Commentaire de la localisation', "Commentaire de l'observation", 'Parcelle de forêt', 'Polygone, transect ou point', 'Coordonnée 1', 'Coordonnée 2', 'Système de coordonnées', 'Observateur(s)', "Fiabilité de l'observation", "Statut juridique"]
+    colonnes_a_afficher = ['Forêt', 'CD_NOM', 'Date début', 'Espèce', 'Commentaire du relevé', 'Commentaire de la localisation', "Commentaire de l'observation", 'Parcelle de forêt', 'Polygone, transect ou point', 'Coordonnée 1', 'Coordonnée 2', 'Système de coordonnées', 'Observateur(s)', "Fiabilité de l'observation", "Statut juridique"]
     
     df_fusion = df[colonnes_a_afficher].merge(
         df_reference[["CD_NOM"]],
