@@ -185,7 +185,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
             <b>Commentaire de l'observation :</b> {safe_get(row.get("Commentaire de l'observation"))}<br>
             <b>Commentaire du relevé :</b> {safe_get(row.get("Commentaire du relevé"))}<br>
             <b>Date d'observation :</b> {safe_get(row.get("Date de début"))}<br>
-            <b>Polygone, transect, point : </b> {row["Polygone, transect ou point"]}<br>
+            <b>Surface de la géométrie : </b> {row["Surface de la géométrie"]}<br>
             <b>Système de coordonnées :</b> {safe_get(row.get("Système de coordonnées"))}<br>
             """
 
