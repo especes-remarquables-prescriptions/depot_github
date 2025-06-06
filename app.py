@@ -124,7 +124,10 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
         on="CD_NOM", how="left"
     )
 
-    df_fusion = df.merge(
+    # Colonnes à afficher
+    colonnes_a_afficher = ['Forêt', 'Code taxon (cd_nom)', 'Date début', 'Espèce', 'Commentaire du relevé', 'Commentaire de la localisation', "Commentaire de l'observation", 'Parcelle de forêt', 'Polygone, transect ou point', 'Coordonnée 1', 'Coordonnée 2', 'Système de coordonnées' 'Observateur(s)', "Fiabilité de l'observation", "Statut juridique"]
+    
+    df_fusion = df[colonnes_a_afficher].merge(
         df_reference[["CD_NOM"]],
         on="CD_NOM", how="left"
     )
@@ -180,11 +183,11 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
             <b>Espèce :</b> {safe_get(row.get('Espèce'))}<br>
             <b>Commentaire de la localisation :</b> {safe_get(row.get('Commentaire de la localisation'))}<br>
             <b>Commentaire de l'observation :</b> {safe_get(row.get("Commentaire de l'observation"))}<br>
+            <b>Commentaire du relevé :</b> {safe_get(row.get("Commentaire du relevé"))}<br>
             <b>Date d'observation :</b> {safe_get(row.get("Date de début"))}<br>
-            <b>Coordonnée 1 :</b> {row["Coordonnée 1"]}<br>
-            <b>Coordonnée 2 :</b> {row["Coordonnée 2"]}<br>
+            <b>Polygone, transect, point : </b> {row["Polygone, transect ou point"]}<br>
             <b>Système de coordonnées :</b> {safe_get(row.get("Système de coordonnées"))}<br>
-            <b>Précision de la localisation :</b> {safe_get(row.get("Précision de la localisation"))}"""
+            """
 
             folium.CircleMarker(
                 location=[row["Coordonnée 2"], row["Coordonnée 1"]],
@@ -270,7 +273,10 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
         st.warning("Aucune espèce à afficher pour cette sélection.")
         return
 
-    st.dataframe(df_filtré)
+    # Colonnes à afficher
+    colonnes_a_afficher = ['Forêt', 'Code taxon (cd_nom)', 'Date début', 'Espèce', 'Commentaire du relevé', 'Commentaire de la localisation', "Commentaire de l'observation", 'Parcelle de forêt', 'Polygone, transect ou point', 'Coordonnée 1', 'Coordonnée 2', 'Système de coordonnées' 'Observateur(s)', "Fiabilité de l'observation", "Statut juridique"]
+
+    st.dataframe(df_filtré[colonnes_a_afficher])
 
     # Création d’un mapping lisible : {cd_nom: "Espèce"}
     df_temp = df_filtré[['Code taxon (cd_nom)', 'Espèce']].dropna()
