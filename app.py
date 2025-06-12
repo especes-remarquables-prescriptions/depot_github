@@ -40,30 +40,6 @@ def traduire_statut(statut):
     return traductions.get(statut, statut) # Retourne le statut traduit ou le statut d'origine si non trouvé            
 
 
-# Fonction pour obtenir une couleur en fonction de l’indice de priorité de conservation
-def get_conservation_color(index):
-    colors = {
-        1: '#FFFFFF',  # blanc
-        2: '#FDE9EA',  # rouge très pâle
-        3: '#FFB7B7',  # rose pastel
-        4: '#FF797C',  # rouge moyen doux
-        5: '#FF0000',  # rouge profond
-    }
-    return colors.get(index, '#ffffff')  # Blanc par défaut si l’indice est inconnu
-
-
-# Fonction pour obtenir une couleur en fonction de l’indice de priorité réglementaire
-def get_reglementaire_color(index):
-    colors = {
-        0: '#FFFFFF',  # blanc
-        1: '#FDE9EA',  # rouge très pâle
-        2: '#FFB7B7',  # rose pastel
-        3: '#FF797C',  # rouge moyen doux
-        4: '#FF0000',  # rouge profond
-    }
-    return colors.get(index, '#ffffff') # Blanc par défaut si l’indice est inconnu
-
-
 # Fonction de reset global
 def reset_all():
     st.session_state.selected_foret = None
@@ -71,36 +47,44 @@ def reset_all():
     st.session_state.view = "start"
     st.session_state.reset_requested = True
 
-# Dictionnaire des couleurs de point de la carte par niveau de priorité conservation
-couleurs = {
-    1: "#00B050",   # vert foncé
-    2: "#92D050",   # vert clair
-    3: "#FFFF00",   # jaune
-    4: "#FF9900",   # orange
-    5: "#FF0000",   # rouge
-    "default": "#D3D3D3"  # gris clair
-}
 
-# Détermination de la couleur du point de la carte d'après les indices
-def get_couleur_personnalisee(row):
-    c = row["Conservation"]
-    r = row["Réglementaire"]
-
+#Fonction d'affichage du fond
+def get_indice_global_color(val):
     try:
-        if c == 5 or r == 4:
-            return couleurs[5]
-        elif c == 4 or r == 3:
-            return couleurs[4]
-        elif c == 3 or r == 2:
-            return couleurs[3]
-        elif c == 2 or r == 1:
-            return couleurs[2]
-        elif c == 1 or r == 0:
-            return couleurs[1]
-        else:
-            return couleurs["default"]
+        v = float(val)
+        if 0 <= v <= 2:
+            return '#92D050'  # vert
+        elif 3 <= v <= 8:
+            return '#FFFF00'  # jaune
+        elif 9 <= v <= 12:
+            return '#FFC000'  # orange
+        elif 13 <= v <= 16:
+            return '#FF0000'  # rouge
+        elif 17 <= v <= 20:
+            return '#C00000'  # marron
     except:
-        return couleurs["default"]
+        return '#ffffff'
+    return '#ffffff'
+
+
+#Fonction d'affichage des points naturalistes par couleur
+def get_indice_global_color_row(row):
+    try:
+        v = float(row)
+        if 0 <= v <= 2:
+            return '#92D050'  # vert
+        elif 3 <= v <= 8:
+            return '#FFFF00'  # jaune
+        elif 9 <= v <= 12:
+            return '#FFC000'  # orange
+        elif 13 <= v <= 16:
+            return '#FF0000'  # rouge
+        elif 17 <= v <= 20:
+            return '#C00000'  # marron
+    except:
+        return '#ffffff'
+    return '#ffffff'
+
 
 #Pour enlever sécuriser l'affichage des popus qui sinon peuvent faire bugger la carte
 def safe_get(val):
@@ -112,6 +96,7 @@ def safe_get(val):
     val_str = val_str.replace("\n", "<br>")  # gestion des retours à la ligne
     return val_str
 
+
 # Fonction d'affichage des cartes
 def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     if df.empty:
@@ -121,7 +106,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     # Fusion avec la table de référence via CD_NOM
     df = df.rename(columns={"Code taxon (cd_nom)": "CD_NOM"})
     df_popup = df.merge(
-        df_reference[["CD_NOM", "Conservation", "Réglementaire"]],
+        df_reference[["CD_NOM", "Indice_global"]],
         on="CD_NOM", how="left"
     )
 
@@ -136,7 +121,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     # Fusion complète pour export
     colonnes_reference = [
         "Cat_naturaliste", "Nom_scientifique_valide", "LR_nat", "LR_reg",
-        "Conservation",
+        "Indice_global",
         "Directives_euro", "Plan_action", "Arrêté_protection_nationale", "Arrêté_protection_BN",
         "Arrêté_protection_HN", "Article_arrêté", "Type_protection", "Conseils_gestion"
     ]
@@ -178,7 +163,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     # Ajout des points naturalistes
     for _, row in df_popup.iterrows():
         if pd.notna(row["Coordonnée 1"]) and pd.notna(row["Coordonnée 2"]):
-            couleur = get_couleur_personnalisee(row)
+            couleur = get_indice_global_color_row(row["Indice_global"])
 
             popup = f"""<b>Parcelle :</b> {safe_get(row.get('Parcelle de forêt'))}<br>
             <b>Espèce :</b> {safe_get(row.get('Espèce'))}<br>
@@ -212,7 +197,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     # Affichage dans Streamlit
     with st.container():
         st.markdown(f"### {titre}")
-        col1, col2 = st.columns([5.5, 1.5])  # Large légende à gauche, petit bouton à droite
+        col1, col2 = st.columns([4, 1.5])  # Large légende à gauche, petit bouton à droite
 
         with col1:
             st.markdown("""
@@ -230,28 +215,24 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
                 overflow-x: auto;
             ">
                 <div style="display: flex; align-items: center;">
-                    <span style="width:14px; height:14px; background-color:#FF0000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
-                    Enjeu potentiellement majeur
+                    <span style="width:14px; height:14px; background-color:#C00000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu majeur 
                 </div>
                 <div style="display: flex; align-items: center;">
-                    <span style="width:14px; height:14px; background-color:#FF9900; border-radius:50%; margin-right:6px; display:inline-block;"></span>
-                    Enjeu potentiellement fort
+                    <span style="width:14px; height:14px; background-color:#FF0000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu fort
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#FFC000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu élevé
                 </div>
                 <div style="display: flex; align-items: center;">
                     <span style="width:14px; height:14px; background-color:#FFFF00; border-radius:50%; margin-right:6px; display:inline-block;"></span>
-                    Enjeu potentiellement élevé
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <span style="width:14px; height:14px; background-color:#92D050; border-radius:50%; margin-right:6px; display:inline-block;"></span>
                     Enjeu modéré
                 </div>
                 <div style="display: flex; align-items: center;">
-                    <span style="width:14px; height:14px; background-color:#00B050; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    <span style="width:14px; height:14px; background-color:#92D050; border-radius:50%; margin-right:6px; display:inline-block;"></span>
                     Enjeu faible
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <span style="width:14px; height:14px; background-color:#D3D3D3; border-radius:50%; margin-right:6px; display:inline-block;"></span>
-                    Enjeu inconnu
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -319,13 +300,49 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
             st.markdown(f"**Nom vernaculaire :** {species_reference_info['Nom_vernaculaire'].iloc[0]}")
             st.markdown(f"**Catégorie naturaliste :** {species_reference_info['Cat_naturaliste'].iloc[0]}")
 
-            conserv_index = species_reference_info['Conservation'].iloc[0]
-            color = get_conservation_color(conserv_index)
-            st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité de conservation* :</b> {conserv_index}</div>""", unsafe_allow_html=True)
-
-            reg_index = species_reference_info['Réglementaire'].iloc[0]
-            color_reg = get_reglementaire_color(reg_index)
-            st.markdown(f"""<div style='background-color: {color_reg}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité réglementaire* :</b> {reg_index}</div>""", unsafe_allow_html=True)
+            global_index = species_reference_info['Indice_global'].iloc[0]
+            color = get_indice_global_color(global_index)
+            st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Indice d'enjeu global* :</b> {global_index} / 20 </div>""", unsafe_allow_html=True)
+            st.markdown("""<br>
+            <div style="
+                background-color: white;
+                border: 1px solid black;
+                border-radius: 10px;
+                padding: 12px 24px;
+                box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 24px;
+                font-size: 14px;
+                overflow-x: auto;
+            ">
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#C00000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu majeur (18-20)
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#FF0000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu fort (14-16)
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#FFC000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu élevé (10-12)
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#FFFF00; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu modéré (4-8)
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="width:14px; height:14px; background-color:#92D050; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                    Enjeu faible (0-2)
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            st.markdown(
+                "<br> <div style='font-size:14px'> <i>* Pour en savoir plus sur cet indice, rendez-vous en page d'accueil</i></div>",
+                unsafe_allow_html=True
+            )
 
             st.markdown ("---")
             st.markdown(f"**Code unique clause :** {species_reference_info['Code_unique'].iloc[0]}")
@@ -339,29 +356,14 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 st.write(f"**Fiche vente (PRODUCTION BOIS) :** {species_reference_info['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
 
 
-            st.markdown ("---")
-            with st.expander("*Légende des indices de priorité"):
-                st.markdown("""
-                **Indice de priorité de conservation** :
-                - `5` : Priorité de conservation cruciale
-                - `4` : Priorité de conservation majeure 
-                - `3` : Priorité de conservation forte
-                - `2` : Priorité de conservation significative
-                - `1` : Priorité de conservation modérée
-
-                **Indice de priorité réglementaire** :
-                - `4` : Risque réglementaire majeur (Espèce d'intérêt européen + protection nationale ou régionale).
-                - `3` : Risque réglementaire élevé (Protection nationale ou régionale) si altération des spécimens OU des éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                - `2` : Risque réglementaire uniquement si altération des spécimens.
-                - `1` : La gestion forestière courante de l'ONF suffit à conserver le bon état des populations de l'espèce à l'échelle du massif.
-                - `0` : Espèce non protégée.
-                """)
-
             respo_dict = {1: "Faible", 2: "Modérée", 3: "Significative", 4: "Forte", 5: "Majeure"}
             valeur_respo = species_reference_info['Respo_reg'].iloc[0]
             texte_respo = respo_dict.get(valeur_respo, "Non Renseigné")
 
             with st.expander("📘 Détail des statuts"):
+                st.write(f"**Indice de priorité réglementaire (détails en page d'accueil) :** {species_reference_info['Réglementaire'].iloc[0]} / 4")
+                st.write(f"**Indice de priorité de conservation (détails en page d'accueil) :** {species_reference_info['Conservation'].iloc[0]} / 4")
+
                 st.write(f"**Liste rouge régionale :** {traduire_statut(species_reference_info['LR_reg'].iloc[0])}")
                 st.write(f"**Liste rouge nationale :** {traduire_statut(species_reference_info['LR_nat'].iloc[0])}")
                 st.write(f"**Responsabilité régionale :** {texte_respo}")
@@ -392,6 +394,36 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
 
         else:
             st.info("❌ Cette espèce ne fait pas l'objet de prescription environnementale.")
+
+
+# Fonction de mise en forme conditionnelle du réferentiel pour la colonne "indice_global"
+def color_indice(val):
+    try:
+        v = float(val)
+    except:
+        return ''
+    if 0 <= v <= 2:
+        return 'background-color: #92D050'
+    elif 4 <= v <= 8:
+        return 'background-color: #FFFF00'
+    elif 10 <= v <= 12:
+        return 'background-color: #FFC000'
+    elif 14 <= v <= 16:
+        return 'background-color: #FF0000'
+    elif 18 <= v <= 20:
+        return 'background-color: #C00000; color: white'
+    return ''
+
+
+# Fonction de mise en forme du reéférentiel ligne par ligne selon "Cat_naturaliste"
+def color_by_cat(df):
+    colors = ['#f9f9f9', '#e6f7ff', '#fff2e6', '#f0f0f0', '#e6ffe6']
+    cat_map = {cat: colors[i % len(colors)] for i, cat in enumerate(df['Cat_naturaliste'].unique())}
+    return pd.DataFrame([
+        [f'background-color: {cat_map[row["Cat_naturaliste"]]}' for _ in row]
+        for _, row in df.iterrows()
+    ], columns=df.columns)
+
 
 
 # --------------------- CONFIGURATION ---------------------
@@ -522,7 +554,7 @@ if st.session_state.authenticated:
     @st.cache_data
     def load_reference_especes():
         file_path = Path(__file__).parent / "Metadonnees.xlsx"
-        df_reference = pd.read_excel(file_path)
+        df_reference = pd.read_excel(file_path, keep_default_na=False)
         return df_reference
 
     # Chargement de la notice de l'export aménagement
@@ -544,6 +576,7 @@ if st.session_state.authenticated:
     df["Code taxon (cd_nom)"] = df["Code taxon (cd_nom)"].str.strip()
     df = df[df["Code taxon (cd_nom)"].isin(codes_autorises)] # Filtrage uniquement sur les espèces autorisées
     forets = df['Forêt'].dropna().unique() # Liste des forêts sans doublons ni NaN
+
 
 
     # --------------------- PAGE ACCUEIL ---------------------
@@ -741,70 +774,70 @@ if st.session_state.authenticated:
                     st.markdown(f"**Nom vernaculaire :** {match['Nom_vernaculaire'].iloc[0]}")
                     st.markdown(f"**Catégorie naturaliste :** {match['Cat_naturaliste'].iloc[0]}")
                     
-                    conserv_index = match['Conservation'].iloc[0]
-                    color = get_conservation_color(conserv_index)
-
-                    st.markdown(f"""
-                        <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité de conservation*:</b> {conserv_index}
+                    global_index = match['Indice_global'].iloc[0]
+                    color = get_indice_global_color(global_index)
+                    st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Indice d'enjeu global* :</b> {global_index} / 20 </div>""", unsafe_allow_html=True)
+                    st.markdown("""<br>
+                    <div style="
+                        background-color: white;
+                        border: 1px solid black;
+                        border-radius: 10px;
+                        padding: 12px 24px;
+                        box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+                        display: flex;
+                        flex-wrap: nowrap;
+                        align-items: center;
+                        gap: 24px;
+                        font-size: 14px;
+                        overflow-x: auto;
+                    ">
+                        <div style="display: flex; align-items: center;">
+                            <span style="width:14px; height:14px; background-color:#C00000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                            Enjeu majeur (18-20)
                         </div>
-                        """, unsafe_allow_html=True)
-                    
-                    reg_index = match['Réglementaire'].iloc[0]
-                    color_reg = get_reglementaire_color(reg_index)
-
-                    st.markdown(f"""
-                        <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité réglementaire*:</b> {reg_index}
+                        <div style="display: flex; align-items: center;">
+                            <span style="width:14px; height:14px; background-color:#FF0000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                            Enjeu fort (14-16)
                         </div>
-                        """, unsafe_allow_html=True)
+                        <div style="display: flex; align-items: center;">
+                            <span style="width:14px; height:14px; background-color:#FFC000; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                            Enjeu élevé (10-12)
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span style="width:14px; height:14px; background-color:#FFFF00; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                            Enjeu modéré (4-8)
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span style="width:14px; height:14px; background-color:#92D050; border-radius:50%; margin-right:6px; display:inline-block;"></span>
+                            Enjeu faible (0-2)
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    st.markdown(
+                        "<br> <div style='font-size:14px'> <i>* Pour en savoir plus sur cet indice, rendez-vous en page d'accueil</i></div>",
+                        unsafe_allow_html=True
+                    )
 
                     st.markdown ("---")
                     st.markdown(f"**Code unique clause :** {match['Code_unique'].iloc[0]}")
                     st.markdown(f"**Condition d'application de la clause :** {match['Condition(s)_application_clause'].iloc[0]}")
 
                     st.markdown(f"**Rôle du TFT :** {match['Rôle_TFT'].iloc[0]}")
-                    
+
                     with st.expander("📋 Libellé des clauses à inscrire"):
-                        st.write(f"**Libellé Fiche chantier (TECK) :** {match['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
-                        st.write(f"**Libellé Fiche désignation (DESIGNATION MOBILE) :** {match['Libellé_fiche_désignation_ONF (DESIGNATION MOBILE)'].iloc[0]}")
-                        st.write(f"**Libellé Fiche vente (PRODUCTION BOIS) :** {match['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
+                        st.write(f"**Fiche chantier (TECK) :** {match['Libellé_fiche_chantier_ONF (TECK)'].iloc[0]}")
+                        st.write(f"**Fiche désignation (DESIGNATION MOBILE) :** {match['Libellé_fiche_désignation_ONF (DESIGNATION MOBILE)'].iloc[0]}")
+                        st.write(f"**Fiche vente (PRODUCTION BOIS) :** {match['Libellé_fiche_vente_ONF (PRODUCTION BOIS)'].iloc[0]}")
 
 
-                    st.markdown ("---")
-                    with st.expander("*Légende des indices de priorité"):
-                        st.markdown("""
-                        **Indice de priorité de conservation** :
-                        - `5` : Priorité de conservation cruciale
-                        - `4` : Priorité de conservation majeure
-                        - `3` : Priorité de conservation forte
-                        - `2` : Priorité de conservation significative
-                        - `1` : Priorité de conservation modérée
-
-                        **Indice de priorité réglementaire** :
-                        - `4` : Risque réglementaire majeur (Espèce d'intérêt européen + protection nationale ou régionale).
-                        - `3` : Risque réglementaire élevé (Protection nationale ou régionale) si altération des spécimens OU des éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                        - `2` : Risque réglementaire uniquement si altération des spécimens.
-                        - `1` : La gestion forestière courante de l'ONF suffit à conserver le bon état des populations de l'espèce à l'échelle du massif.
-                        - `0` : Espèce non protégée.
-                        """)
-
-                    # Dictionnaire de correspondance
-                    respo_dict = {
-                            1: "Faible",
-                            2: "Modérée",
-                            3: "Significative",
-                            4: "Forte",
-                            5: "Majeure"
-                        }
-
-                    # Récupérer la valeur brute dans le tableau
+                    respo_dict = {1: "Faible", 2: "Modérée", 3: "Significative", 4: "Forte", 5: "Majeure"}
                     valeur_respo = match['Respo_reg'].iloc[0]
-
-                    # Traduire en texte si possible
                     texte_respo = respo_dict.get(valeur_respo, "Non Renseigné")
 
                     with st.expander("📘 Détail des statuts"):
+                        st.write(f"**Indice de priorité réglementaire (détails en page d'accueil) :** {match['Réglementaire'].iloc[0]} / 4")
+                        st.write(f"**Indice de priorité de conservation (détails en page d'accueil) :** {match['Conservation'].iloc[0]} / 4")
+                
                         st.write(f"**Liste rouge régionale :** {traduire_statut(match['LR_reg'].iloc[0])}")
                         st.write(f"**Liste rouge nationale :** {traduire_statut(match['LR_nat'].iloc[0])}")
                         st.write(f"**Responsabilité régionale :** {texte_respo}")
@@ -852,32 +885,6 @@ if st.session_state.authenticated:
 
         df = df_reference[colonnes_a_afficher].copy()
 
-        # ➤ Mise en forme conditionnelle pour la colonne "indice_global"
-        def color_indice(val):
-            try:
-                v = float(val)
-            except:
-                return ''
-            if 0 <= v <= 2:
-                return 'background-color: lightgreen'
-            elif 4 <= v <= 8:
-                return 'background-color: yellow'
-            elif 10 <= v <= 12:
-                return 'background-color: orange'
-            elif 14 <= v <= 16:
-                return 'background-color: red'
-            elif 18 <= v <= 20:
-                return 'background-color: brown; color: white'
-            return ''
-
-        # ➤ Mise en forme ligne par ligne selon "Cat_naturaliste"
-        def color_by_cat(df):
-            colors = ['#f9f9f9', '#e6f7ff', '#fff2e6', '#f0f0f0', '#e6ffe6']
-            cat_map = {cat: colors[i % len(colors)] for i, cat in enumerate(df['Cat_naturaliste'].unique())}
-            return pd.DataFrame([
-                [f'background-color: {cat_map[row["Cat_naturaliste"]]}' for _ in row]
-                for _, row in df.iterrows()
-            ], columns=df.columns)
 
         # ➤ Colonnes à afficher verticalement dans l’en-tête
         colonnes_verticales = [
