@@ -3,13 +3,14 @@
 import streamlit as st # Framework pour créer des applications web interactives
 import pandas as pd # Bibliothèque pour manipuler des données tabulaires
 import geopandas as gpd
+import numpy as np #referentiel
 import folium #carte
 from streamlit_folium import st_folium #carte
-from streamlit.components.v1 import html #insertion excel online
 import html as html2 
 import io # export de donnees 
 import os #chemin relatif des fichiers
 from pathlib import Path
+from io import BytesIO #referentiel
 
 # --------------------- FONCTIONS ---------------------
 
@@ -82,8 +83,8 @@ couleurs = {
 
 # Détermination de la couleur du point de la carte d'après les indices
 def get_couleur_personnalisee(row):
-    c = row["Indice_priorité_conservation"]
-    r = row["Indice_priorité_réglementaire"]
+    c = row["Conservation"]
+    r = row["Réglementaire"]
 
     try:
         if c == 5 or r == 4:
@@ -120,7 +121,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     # Fusion avec la table de référence via CD_NOM
     df = df.rename(columns={"Code taxon (cd_nom)": "CD_NOM"})
     df_popup = df.merge(
-        df_reference[["CD_NOM", "Indice_priorité_conservation", "Indice_priorité_réglementaire"]],
+        df_reference[["CD_NOM", "Conservation", "Réglementaire"]],
         on="CD_NOM", how="left"
     )
 
@@ -135,7 +136,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
     # Fusion complète pour export
     colonnes_reference = [
         "Cat_naturaliste", "Nom_scientifique_valide", "LR_nat", "LR_reg",
-        "Indice_priorité_conservation",
+        "Conservation",
         "Directives_euro", "Plan_action", "Arrêté_protection_nationale", "Arrêté_protection_BN",
         "Arrêté_protection_HN", "Article_arrêté", "Type_protection", "Conseils_gestion"
     ]
@@ -318,11 +319,11 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
             st.markdown(f"**Nom vernaculaire :** {species_reference_info['Nom_vernaculaire'].iloc[0]}")
             st.markdown(f"**Catégorie naturaliste :** {species_reference_info['Cat_naturaliste'].iloc[0]}")
 
-            conserv_index = species_reference_info['Indice_priorité_conservation'].iloc[0]
+            conserv_index = species_reference_info['Conservation'].iloc[0]
             color = get_conservation_color(conserv_index)
             st.markdown(f"""<div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité de conservation* :</b> {conserv_index}</div>""", unsafe_allow_html=True)
 
-            reg_index = species_reference_info['Indice_priorité_réglementaire'].iloc[0]
+            reg_index = species_reference_info['Réglementaire'].iloc[0]
             color_reg = get_reglementaire_color(reg_index)
             st.markdown(f"""<div style='background-color: {color_reg}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'><b>Priorité réglementaire* :</b> {reg_index}</div>""", unsafe_allow_html=True)
 
@@ -349,12 +350,12 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
                 - `1` : Priorité de conservation modérée
 
                 **Indice de priorité réglementaire** :
-                        - `4` : Risque réglementaire majeur (Espèce d'intérêt européen + protection nationale ou régionale).
-                        - `3` : Risque réglementaire élevé (Protection nationale ou régionale) si altération des spécimens OU des éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
-                        - `2` : Risque réglementaire uniquement si altération des spécimens.
-                        - `1` : La gestion forestière courante de l'ONF suffit à conserver le bon état des populations de l'espèce à l'échelle du massif.
-                        - `0` : Espèce non protégée.
-                        """)
+                - `4` : Risque réglementaire majeur (Espèce d'intérêt européen + protection nationale ou régionale).
+                - `3` : Risque réglementaire élevé (Protection nationale ou régionale) si altération des spécimens OU des éléments nécessaires au bon fonctionnement de leur cycle biologique (site de reproduction, site de repos, source de nourriture etc.).
+                - `2` : Risque réglementaire uniquement si altération des spécimens.
+                - `1` : La gestion forestière courante de l'ONF suffit à conserver le bon état des populations de l'espèce à l'échelle du massif.
+                - `0` : Espèce non protégée.
+                """)
 
             respo_dict = {1: "Faible", 2: "Modérée", 3: "Significative", 4: "Forte", 5: "Majeure"}
             valeur_respo = species_reference_info['Respo_reg'].iloc[0]
@@ -740,21 +741,21 @@ if st.session_state.authenticated:
                     st.markdown(f"**Nom vernaculaire :** {match['Nom_vernaculaire'].iloc[0]}")
                     st.markdown(f"**Catégorie naturaliste :** {match['Cat_naturaliste'].iloc[0]}")
                     
-                    conserv_index = match['Indice_priorité_conservation'].iloc[0]
+                    conserv_index = match['Conservation'].iloc[0]
                     color = get_conservation_color(conserv_index)
 
                     st.markdown(f"""
                         <div style='background-color: {color}; padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité de conservatio*:</b> {conserv_index}
+                        <b>Priorité de conservation*:</b> {conserv_index}
                         </div>
                         """, unsafe_allow_html=True)
                     
-                    reg_index = match['Indice_priorité_réglementaire'].iloc[0]
+                    reg_index = match['Réglementaire'].iloc[0]
                     color_reg = get_reglementaire_color(reg_index)
 
                     st.markdown(f"""
                         <div style='background-color: {color_reg};  padding: 6px 12px; border-radius: 8px; font-size: 20px; display: inline-block;'>
-                        <b>Priorité réglementair*:</b> {reg_index}
+                        <b>Priorité réglementaire*:</b> {reg_index}
                         </div>
                         """, unsafe_allow_html=True)
 
@@ -841,8 +842,90 @@ if st.session_state.authenticated:
 
     elif page == "Référentiel" :
         st.markdown("### Tableau référentiel des statuts des espèces remarquables pour l'ONF Normandie")
-        st.markdown(
-        '[➡️ Voir le tableau Excel en ligne](https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={719dad7b-de23-4680-8262-4083c17d5603}&action=embedview)'
+        # Colonnes à afficher
+        colonnes_a_afficher = [
+            "Cat_naturaliste", "CD_NOM", "Nom_scientifique_valide", "Nom_vernaculaire", "LR_nat", "LR_reg", 
+            "Vulnérabilité", "Respo_reg", "Conservation", "Réglementaire", "Indice_global", 
+            "Directives_euro", "Plan_action", "Arrêté_protection_nationale", "Arrêté_protection_BN", "Arrêté_protection_HN", "Article_arrêté",
+            "Type_protection", "Ubiquiste"
+        ]
+
+        df = df_reference[colonnes_a_afficher].copy()
+
+        # ➤ Mise en forme conditionnelle pour la colonne "indice_global"
+        def color_indice(val):
+            try:
+                v = float(val)
+            except:
+                return ''
+            if 0 <= v <= 2:
+                return 'background-color: lightgreen'
+            elif 4 <= v <= 8:
+                return 'background-color: yellow'
+            elif 10 <= v <= 12:
+                return 'background-color: orange'
+            elif 14 <= v <= 16:
+                return 'background-color: red'
+            elif 18 <= v <= 20:
+                return 'background-color: brown; color: white'
+            return ''
+
+        # ➤ Mise en forme ligne par ligne selon "Cat_naturaliste"
+        def color_by_cat(df):
+            colors = ['#f9f9f9', '#e6f7ff', '#fff2e6', '#f0f0f0', '#e6ffe6']
+            cat_map = {cat: colors[i % len(colors)] for i, cat in enumerate(df['Cat_naturaliste'].unique())}
+            return pd.DataFrame([
+                [f'background-color: {cat_map[row["Cat_naturaliste"]]}' for _ in row]
+                for _, row in df.iterrows()
+            ], columns=df.columns)
+
+        # ➤ Colonnes à afficher verticalement dans l’en-tête
+        colonnes_verticales = [
+            "LR_nat", "LR_reg", "Vulnérabilité", "Respo_reg", 
+            "Conservation", "Réglementaire", "Indice_global", "Ubiquiste"
+        ]
+
+        # ➤ Appliquer les styles
+        styled_df = df.style
+
+        # Coloration par catégorie naturaliste
+        styled_df = styled_df.apply(color_by_cat, axis=None)
+
+        # Mise en forme conditionnelle sur indice_global
+        styled_df = styled_df.applymap(color_indice, subset=['Indice_global'])
+
+        # ➤ Styles pour l’en-tête
+        styles_entetes = [
+            {'selector': 'th', 'props': [('background-color', '#D3D3D3'), ('color', 'black')]}
+        ]
+
+        for col in colonnes_verticales:
+            if col in df.columns:
+                col_idx = df.columns.get_loc(col)
+                styles_entetes.append({
+                    'selector': f'th.col{col_idx}',
+                    'props': [
+                        ('writing-mode', 'vertical-rl'),
+                        ('text-orientation', 'upright'),
+                        ('white-space', 'nowrap'),
+                        ('vertical-align', 'bottom'),
+                        ('height', '150px')
+                    ]
+                })
+
+        styled_df = styled_df.set_table_styles(styles_entetes)
+
+        #Afficher
+        st.write(styled_df)
+        
+        # ➤ Export Excel avec mise en forme
+        output = BytesIO()
+        styled_df.to_excel(output, engine='openpyxl', index=False)
+        output.seek(0)
+
+        st.download_button(
+            label="📥 Télécharger le tableau (.xlsx)",
+            data=output,
+            file_name="referentiel_especes.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
-        iframe_code = """<iframe width="2000" height="1000" frameborder="0" scrolling="no" src="https://officenationaldesforets-my.sharepoint.com/personal/matteo_kressmann_onf_fr/_layouts/15/Doc.aspx?sourcedoc={719dad7b-de23-4680-8262-4083c17d5603}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>"""
-        html(iframe_code, height=600)
