@@ -2,5 +2,10 @@ streamlit
 pandas
 openpyxl
 geopandas
+numpy
 folium
 streamlit-folium
+html
+io
+os
+pathlib

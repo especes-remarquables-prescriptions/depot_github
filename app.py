@@ -559,15 +559,23 @@ if st.session_state.authenticated:
 
     # Chargement de la notice de l'export aménagement
     @st.cache_data
-    def load_notice():
-        file_path = Path(__file__).parent / "Notice_export.xlsx"
+    def load_notice_am():
+        file_path = Path(__file__).parent / "Notice_export_amgt.xlsx"
         return pd.read_excel(file_path)
+
+    # Chargement de la notice de l'export aménagement
+    @st.cache_data
+    def load_notice_ref():
+        file_path = Path(__file__).parent / "Notice_export_ref.xlsx"
+        return pd.read_excel(file_path)
+    
 
     # Exécution des fonctions de chargement
     df = load_data()
     codes_autorises = load_codes_autorises()
     df_reference = load_reference_especes()
-    df_notice = load_notice()
+    df_notice_am = load_notice_am()
+    df_notice_ref = load_notice_ref()
 
     # Nettoyage des colonnes pour garantir l'uniformité des CD_NOM
     df_reference['CD_NOM'] = df_reference['CD_NOM'].astype(str).str.strip()
@@ -880,7 +888,7 @@ if st.session_state.authenticated:
             "Cat_naturaliste", "CD_NOM", "Nom_scientifique_valide", "Nom_vernaculaire", "LR_nat", "LR_reg", 
             "Vulnérabilité", "Respo_reg", "Conservation", "Réglementaire", "Indice_global", 
             "Directives_euro", "Plan_action", "Arrêté_protection_nationale", "Arrêté_protection_BN", "Arrêté_protection_HN", "Article_arrêté",
-            "Type_protection", "Ubiquiste"
+            "Type_protection", "LC_non_traçable"
         ]
 
         df = df_reference[colonnes_a_afficher].copy()
@@ -889,7 +897,7 @@ if st.session_state.authenticated:
         # ➤ Colonnes à afficher verticalement dans l’en-tête
         colonnes_verticales = [
             "LR_nat", "LR_reg", "Vulnérabilité", "Respo_reg", 
-            "Conservation", "Réglementaire", "Indice_global", "Ubiquiste"
+            "Conservation", "Réglementaire", "Indice_global", "LC_non_traçable"
         ]
 
         # ➤ Appliquer les styles
@@ -931,8 +939,15 @@ if st.session_state.authenticated:
         output.seek(0)
 
         st.download_button(
-            label="📥 Télécharger le tableau (.xlsx)",
+            label="📥 Télécharger le référentiel (.xlsx)",
             data=output,
             file_name="referentiel_especes.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+        st.download_button(
+            label="📥 Télécharger la notice (.xlsx)",
+            data=df_notice_ref,
+            file_name="notice_referentiel.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
