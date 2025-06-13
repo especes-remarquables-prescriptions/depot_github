@@ -5,6 +5,7 @@ import pandas as pd # Bibliothèque pour manipuler des données tabulaires
 import geopandas as gpd
 import numpy as np #referentiel
 import folium #carte
+import xlsxwriter
 from streamlit_folium import st_folium #carte
 import html as html2 
 import io # export de donnees 
