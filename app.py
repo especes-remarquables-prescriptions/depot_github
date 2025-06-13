@@ -5,7 +5,6 @@ import pandas as pd # Bibliothèque pour manipuler des données tabulaires
 import geopandas as gpd
 import numpy as np #referentiel
 import folium #carte
-import XlsxWriter
 from streamlit_folium import st_folium #carte
 import html as html2 
 import io # export de donnees 
@@ -192,7 +191,7 @@ def afficher_carte(df, df_reference, titre="📍 Localisation des espèces "):
 
     buffer = io.BytesIO()
     with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-        df_notice.to_excel(writer, sheet_name="Notice", index=False)
+        df_notice_am.to_excel(writer, sheet_name="Notice", index=False)
         df_export.to_excel(writer, sheet_name="Export aménagement", index=False)
 
     # Affichage dans Streamlit
@@ -341,7 +340,7 @@ def afficher_statuts_prescriptions(df_filtré, df_reference):
             </div>
             """, unsafe_allow_html=True)
             st.markdown(
-                "<br> <div style='font-size:14px'> <i>* Pour en savoir plus sur cet indice, rendez-vous en page d'accueil</i></div>",
+                "<br> <div style='font-size:14px'> <i>* Pour en savoir plus sur cet indice, rendez-vous en page d'accueil.</i></div>",
                 unsafe_allow_html=True
             )
 
@@ -823,7 +822,7 @@ if st.session_state.authenticated:
                     </div>
                     """, unsafe_allow_html=True)
                     st.markdown(
-                        "<br> <div style='font-size:14px'> <i>* Pour en savoir plus sur cet indice, rendez-vous en page d'accueil</i></div>",
+                        "<br> <div style='font-size:14px'> <i>* Pour en savoir plus sur cet indice, rendez-vous en page d'accueil.</i></div>",
                         unsafe_allow_html=True
                     )
 
@@ -947,12 +946,15 @@ if st.session_state.authenticated:
         )
 
         buffer = io.BytesIO()
-        with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+
+        # Écriture du DataFrame dans le buffer
+        with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
             df_notice_ref.to_excel(writer, index=False, sheet_name='Notice')
-            writer.save()
+
+        # Revenir au début du buffer avant de le passer à Streamlit
         buffer.seek(0)
 
-
+        # Bouton de téléchargement
         st.download_button(
             label="📥 Télécharger la notice (.xlsx)",
             data=buffer,
