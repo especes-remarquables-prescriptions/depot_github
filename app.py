@@ -945,9 +945,16 @@ if st.session_state.authenticated:
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
+        buffer = io.BytesIO()
+        with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+            df_notice_ref.to_excel(writer, index=False, sheet_name='Notice')
+            writer.save()
+        buffer.seek(0)
+
+
         st.download_button(
             label="📥 Télécharger la notice (.xlsx)",
-            data=df_notice_ref,
+            data=buffer,
             file_name="notice_referentiel.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
